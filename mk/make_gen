@@ -72,11 +72,11 @@ MakeLinkExternal(srcdir, files) =
 # C
 #
 MakeStaticCLibrary(name, files) =
-    StaticCLibrary($(name), $(files))
+    StaticCLibrary($(name), $(addsuffix _c, $(files)))
 
-    private.cfiles = $(addsuffix .c, $(files))
+    private.cfiles = $(addsuffix _c.c, $(files))
     private.hfiles = $(filter-exists $(addsuffix .h, $(files)))
-    private.ofiles = $(addsuffix $(ext_obj), $(files))
+    private.ofiles = $(addsuffix _c$(ext_obj), $(files))
     MAKEFILE_LINK += $(cfiles) $(hfiles)
     MAKEFILE_TEXT += $"""
 OFILES_$(name) = $(ofiles)
@@ -113,8 +113,11 @@ OCAML_OTHER_LIBS_$(name) = $(ocaml_other_libs)
 OCAML_CLIBS_$(name) = $(ocaml_clibs)
 OCAML_CCLIBS_$(name) = $(ocaml_cclibs)
 
-$(name)$$(EXE): $$(CMOFILES_$(name)) $$(OCAML_LIBS_$(name)) $$(OCAML_CLIBS_$(name))
+$(name)_byte$$(EXE): $$(CMOFILES_$(name)) $$(OCAML_LIBS_$(name)) $$(OCAML_CLIBS_$(name))
 	$$(OCAMLC) $$(OCAMLFLAGS) -custom -o $$@ $$(OCAML_CCLIBS_$(name)) $$(OCAML_OTHER_LIBS_$(name)) $$(THREADSLIB) $$(OCAML_LIBS_$(name)) $$(CMOFILES_$(name))
+
+$(name)$$(EXE): $$(CMOFILES_$(name):.cmo=.cmx) $$(OCAML_LIBS_$(name):.cma=.cmxa) $$(OCAML_CLIBS_$(name):.cma=.cmxa)
+	$$(OCAMLOPT) $$(OCAMLFLAGS) -o $$@ $$(OCAML_CCLIBS_$(name)) $$(OCAML_OTHER_LIBS_$(name):.cma=.cmxa) $$(THREADSLIB:.cma=.cmxa) $$(OCAML_LIBS_$(name):.cma=.cmxa) $$(CMOFILES_$(name):.cmo=.cmx)
 """
     export
 
@@ -134,6 +137,9 @@ OCAML_LIB_FLAGS_$(name) = $(OCAML_LIB_FLAGS)
 
 $(name).cma: $$(CMOFILES_$(name))
 	$$(OCAMLC) $$(OCAMLFLAGS) $$(OCAML_LIB_FLAGS_$(name)) -a -o $$@ $$(CMOFILES_$(name))
+
+$(name).cmxa: $$(CMOFILES_$(name):.cmo=.cmx)
+	$$(OCAMLOPT) $$(OCAMLFLAGS) $$(OCAML_LIB_FLAGS_$(name)) -a -o $$@ $$(CMOFILES_$(name):.cmo=.cmx)
 """
     export
 
@@ -228,7 +234,7 @@ system = null
 #
 CC = cc
 CFLAGS =
-AR = ar cq
+AR := $(AR) cq
 AROUT =
 EXT_OBJ = .o
 EXT_LIB = .a
@@ -238,7 +244,7 @@ CCOMPTYPE = cc
 OCAMLFLAGS = -w +a-4-32-30-42-40-41 -g $(OCAMLFLAGS_EXTRA)
 THREADSLIB =
 
-.SUFFIXES: .mll .mly .mli .ml .c .cmi .cmo .cma .o
+.SUFFIXES: .mll .mly .mli .ml .c .cmi .cmo .cma .o .cmx
 
 .c.o:
 	inc=`ocamlc -where | tr -d '\015'`; $(CC) $(CFLAGS) -I"$$inc" -I"$$inc/caml" -c $*.c
@@ -285,6 +291,7 @@ private.MAKEFILE_HEAD_COMMON = $'''
 # OCaml configuration
 #
 OCAMLC = ocamlc.opt
+OCAMLOPT = ocamlopt.opt
 OCAMLYACC = ocamlyacc
 OCAMLLEX = ocamllex.opt
 OCAMLDEP = ocamldep.opt
@@ -302,6 +309,9 @@ OCAMLDEP = ocamldep.opt
 
 .ml.cmo:
 	$(OCAMLC) $(OCAMLFLAGS) -c $*.ml
+
+.ml.cmx:
+	$(OCAMLOPT) $(OCAMLFLAGS) -c $*.ml
 
 #
 # The version.txt file

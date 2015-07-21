@@ -99,7 +99,10 @@ protected.toolchain-derive(cc, command, fallback) =
     empty = $(array)
     match $(cc)
     case $"\(.*\)-g?cc"
-        fullcmd = $(concat $(empty), $1, $(command))
+        eprintln("command $1 $(command)")
+        # This is wrong!  fullcmd = $(concat $(empty), $1, $(command))
+        fullcmd = $(concat -, $1 $(command))
+        eprintln("fullcmd $(fullcmd)")
         if $(exists-in-path $(fullcmd))
             return $(fullcmd)
         else
@@ -149,6 +152,15 @@ protected.toolchain-derive(cc, command, fallback) =
         DEFAULT_CC += /nologo
         export
 
+    # archiver
+
+    DEFAULT_AR = ar
+    match $(DEFAULT_CC)
+    case $"\(.*\)-gcc"
+        eprintln("AR : $1")
+        DEFAULT_AR = "$1-ar"
+	export
+	
     # C++ compiler
 
     if $(equal $(CCOMPTYPE), msvc)
@@ -260,7 +272,7 @@ else
     public.CFLAGS = $(OS_CFLAGS)
     public.CXXFLAGS = $(OS_CFLAGS)
     public.AR(name) =
-        return(ar cq $(name))
+        return($(DEFAULT_AR) cq $(name))
     public.RANLIB = ranlib
     public.LD = $(DEFAULT_LD)
     public.INCLUDES[] = .
