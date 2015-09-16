@@ -20,6 +20,8 @@ system = null
 #
 CC = cc
 CFLAGS =
+# /usr/bin/ar does not work with Cygwin32 + OCaml MinGW64
+AR = `ocamlc -config | grep 'ranlib:' | sed -e 's/ranlib: //' -e 's/ranlib/ar/'`
 AR := $(AR) cq
 AROUT =
 EXT_OBJ = .o
