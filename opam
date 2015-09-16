@@ -1,0 +1,12 @@
+opam-version: "1.2"
+maintainer: "jun.furuse@gmail.com"
+authors: [ "blah" ]
+homepage: "blah"
+build: [
+  [make "bootstrap-mingw" "PREFIX=%{prefix}%"]
+  [make "all" "PREFIX=%{prefix}%"]
+  [make "install" "PREFIX=%{prefix}%"]
+]
+depends: ["ocamlfind"]
+patches: [
+]
