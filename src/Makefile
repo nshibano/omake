@@ -24,24 +24,25 @@ CFLAGS =
 AR = `ocamlc -config | grep 'ranlib:' | sed -e 's/ranlib: //' -e 's/ranlib/ar/'`
 AR := $(AR) cq
 AROUT =
-EXT_OBJ = .o
+EXT_OBJ = .co
 EXT_LIB = .a
 EXE =
 CCOMPTYPE = cc
 
 OCAMLFLAGS = -w +a-4-32-30-42-40-41 -g $(OCAMLFLAGS_EXTRA)
-THREADSLIB =
+THREADSLIB = thrads.cmxa
 
-.SUFFIXES: .mll .mly .mli .ml .c .cmi .cmo .cma .o
+.SUFFIXES: .mll .mly .mli .ml .c .cmi .cmo .cma .o .cmx .cmxa .co
 
-.c.o:
-	inc=`ocamlc -where | tr -d '\015'`; $(CC) $(CFLAGS) -I"$$inc" -I"$$inc/caml" -c $*.c
+.c.co:
+	inc=`ocamlc -where | tr -d '\015'`; $(CC) $(CFLAGS) -I"$$inc" -I"$$inc/caml" -o $*$(EXT_OBJ) -c $*.c
 
 
 #
 # OCaml configuration
 #
 OCAMLC = ocamlc.opt
+OCAMLOPT = ocamlopt.opt
 OCAMLYACC = ocamlyacc
 OCAMLLEX = ocamllex.opt
 OCAMLDEP = ocamldep.opt
@@ -59,6 +60,9 @@ OCAMLDEP = ocamldep.opt
 
 .ml.cmo:
 	$(OCAMLC) $(OCAMLFLAGS) -c $*.ml
+
+.ml.cmx:
+	$(OCAMLOPT) $(OCAMLFLAGS) -c $*.ml
 
 #
 # The version.txt file
@@ -135,11 +139,11 @@ readline.c: $(SRC_clib)$(slash)readline.c
 ALLFILES_clib = fam_inotify.c fam_kqueue.c fam_win32.c lm_channel.c lm_compat_win32.c lm_compat_win32.h lm_ctype.c lm_fs_case_sensitive.c lm_heap.c lm_heap.h lm_notify.c lm_printf.c lm_terminfo.c lm_termsize.c lm_uname_ext.c lm_unix_cutil.c omake_shell_spawn.c omake_shell_sys.c readline.c
 
 
-CMOFILES_lm = lm_printf.cmo lm_debug.cmo lm_heap.cmo lm_list_util.cmo lm_array_util.cmo lm_set_sig.cmo lm_set.cmo lm_map_sig.cmo lm_map.cmo lm_int_set.cmo lm_termsize.cmo lm_terminfo.cmo lm_arg.cmo lm_index.cmo lm_thread_sig.cmo lm_thread_core.cmo lm_thread.cmo lm_string_util.cmo lm_string_set.cmo lm_hash.cmo lm_hash_code.cmo lm_symbol.cmo lm_location.cmo lm_position.cmo lm_filename_util.cmo lm_uname.cmo lm_thread_pool.cmo lm_channel.cmo lm_unix_util.cmo lm_db.cmo lm_notify.cmo lm_fs_case_sensitive.cmo lm_wild.cmo lm_readline.cmo lm_marshal.cmo lm_handle_table.cmo lm_int_handle_table.cmo lm_bitset.cmo lm_instrument.cmo
+CMXFILES_lm = lm_printf.cmx lm_debug.cmx lm_heap.cmx lm_list_util.cmx lm_array_util.cmx lm_set_sig.cmx lm_set.cmx lm_map_sig.cmx lm_map.cmx lm_int_set.cmx lm_termsize.cmx lm_terminfo.cmx lm_arg.cmx lm_index.cmx lm_thread_sig.cmx lm_thread_core.cmx lm_thread.cmx lm_string_util.cmx lm_string_set.cmx lm_hash.cmx lm_hash_code.cmx lm_symbol.cmx lm_location.cmx lm_position.cmx lm_filename_util.cmx lm_uname.cmx lm_thread_pool.cmx lm_channel.cmx lm_unix_util.cmx lm_db.cmx lm_notify.cmx lm_fs_case_sensitive.cmx lm_wild.cmx lm_readline.cmx lm_marshal.cmx lm_handle_table.cmx lm_int_handle_table.cmx lm_bitset.cmx lm_instrument.cmx
 OCAML_LIB_FLAGS_lm =
 
-lm.cma: $(CMOFILES_lm)
-	$(OCAMLC) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_lm) -a -o $@ $(CMOFILES_lm)
+lm.cmxa: $(CMXFILES_lm)
+	$(OCAMLOPT) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_lm) -a -o $@ $(CMXFILES_lm)
 
 lm_thread_pool.ml: ..$(slash)src$(slash)libmojave$(slash)lm_thread_pool_$(system).ml
 	$(LN) ..$(slash)src$(slash)libmojave$(slash)lm_thread_pool_$(system).ml lm_thread_pool.ml
@@ -371,11 +375,11 @@ lm_wild.mli: $(SRC_libmojave)$(slash)lm_wild.mli
 ALLFILES_libmojave = lm_arg.ml lm_arg.mli lm_array_util.ml lm_array_util.mli lm_bitset.ml lm_bitset.mli lm_channel.ml lm_channel.mli lm_db.ml lm_db.mli lm_debug.ml lm_debug.mli lm_filename_util.ml lm_filename_util.mli lm_fs_case_sensitive.ml lm_fs_case_sensitive.mli lm_handle_table.ml lm_handle_table.mli lm_hash.ml lm_hash.mli lm_hash_code.ml lm_hash_code.mli lm_heap.ml lm_heap.mli lm_index.ml lm_index.mli lm_instrument.ml lm_instrument.mli lm_int_handle_table.ml lm_int_handle_table.mli lm_int_set.ml lm_int_set.mli lm_list_util.ml lm_list_util.mli lm_location.ml lm_location.mli lm_map.ml lm_map.mli lm_map_sig.ml lm_marshal.ml lm_marshal.mli lm_notify.ml lm_notify.mli lm_position.ml lm_position.mli lm_printf.ml lm_printf.mli lm_readline.ml lm_readline.mli lm_set.ml lm_set.mli lm_set_sig.ml lm_string_set.ml lm_string_set.mli lm_string_util.ml lm_string_util.mli lm_symbol.ml lm_symbol.mli lm_terminfo.ml lm_terminfo.mli lm_termsize.ml lm_termsize.mli lm_thread.ml lm_thread.mli lm_thread_core.mli lm_thread_pool.mli lm_thread_sig.ml lm_uname.ml lm_uname.mli lm_unix_util.ml lm_unix_util.mli lm_wild.ml lm_wild.mli lm_thread_pool.ml lm_thread_core.ml
 
 
-CMOFILES_frt = lm_hash_cons.cmo lm_lexer.cmo lm_parser.cmo lm_glob.cmo
+CMXFILES_frt = lm_hash_cons.cmx lm_lexer.cmx lm_parser.cmx lm_glob.cmx
 OCAML_LIB_FLAGS_frt =
 
-frt.cma: $(CMOFILES_frt)
-	$(OCAMLC) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_frt) -a -o $@ $(CMOFILES_frt)
+frt.cmxa: $(CMXFILES_frt)
+	$(OCAMLOPT) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_frt) -a -o $@ $(CMXFILES_frt)
 
 SRC_front = ..$(slash)src$(slash)front
 
@@ -406,20 +410,20 @@ lm_parser.mli: $(SRC_front)$(slash)lm_parser.mli
 ALLFILES_front = lm_glob.ml lm_glob.mli lm_hash_cons.ml lm_hash_cons.mli lm_lexer.ml lm_lexer.mli lm_parser.ml lm_parser.mli
 
 
-CMOFILES_omake_gen_magic = omake_gen_magic.cmo
-OCAML_LIBS_omake_gen_magic = lm.cma frt.cma
-OCAML_OTHER_LIBS_omake_gen_magic = unix.cma
+CMXFILES_omake_gen_magic = omake_gen_magic.cmx
+OCAML_LIBS_omake_gen_magic = lm.cmxa frt.cmxa
+OCAML_OTHER_LIBS_omake_gen_magic = unix.cmxa
 OCAML_CLIBS_omake_gen_magic = clib$(EXT_LIB)
 OCAML_CCLIBS_omake_gen_magic = -cclib clib$(EXT_LIB)
 
-omake_gen_magic$(EXE): $(CMOFILES_omake_gen_magic) $(OCAML_LIBS_omake_gen_magic) $(OCAML_CLIBS_omake_gen_magic)
-	$(OCAMLC) $(OCAMLFLAGS) -custom -o $@ $(OCAML_CCLIBS_omake_gen_magic) $(OCAML_OTHER_LIBS_omake_gen_magic) $(THREADSLIB) $(OCAML_LIBS_omake_gen_magic) $(CMOFILES_omake_gen_magic)
+omake_gen_magic$(EXE): $(CMXFILES_omake_gen_magic) $(OCAML_LIBS_omake_gen_magic) $(OCAML_CLIBS_omake_gen_magic)
+	$(OCAMLOPT) $(OCAMLFLAGS) -o $@ $(OCAML_CCLIBS_omake_gen_magic) $(OCAML_OTHER_LIBS_omake_gen_magic) $(THREADSLIB) $(OCAML_LIBS_omake_gen_magic) $(CMXFILES_omake_gen_magic)
 
-CMOFILES_magic = omake_magic.cmo
+CMXFILES_magic = omake_magic.cmx
 OCAML_LIB_FLAGS_magic =
 
-magic.cma: $(CMOFILES_magic)
-	$(OCAMLC) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_magic) -a -o $@ $(CMOFILES_magic)
+magic.cmxa: $(CMXFILES_magic)
+	$(OCAMLOPT) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_magic) -a -o $@ $(CMXFILES_magic)
 
 GENMAGIC_DEPS = lm_filename_util.ml lm_hash.ml lm_location.ml lm_map.ml lm_position.ml lm_set.ml lm_symbol.ml omake_value_type.ml omake_cache.ml omake_cache_type.ml omake_node.ml omake_command_digest.ml lm_filename_util.ml lm_hash.ml lm_location.ml lm_symbol.ml lm_map.ml lm_set.ml omake_node.ml omake_ir.ml lm_filename_util.ml lm_hash.ml lm_lexer.ml lm_location.ml lm_map.ml lm_parser.ml lm_position.ml lm_set.ml lm_symbol.ml omake_value_type.ml omake_cache_type.ml omake_ir.ml omake_node.ml omake_env.ml version.txt
 MAGIC_FILES =    --cache-files lm_filename_util.ml lm_hash.ml lm_location.ml lm_map.ml lm_position.ml lm_set.ml lm_symbol.ml omake_value_type.ml omake_cache.ml omake_cache_type.ml omake_node.ml omake_command_digest.ml    --omc-files lm_filename_util.ml lm_hash.ml lm_location.ml lm_symbol.ml lm_map.ml lm_set.ml omake_node.ml omake_ir.ml    --omo-files lm_filename_util.ml lm_hash.ml lm_lexer.ml lm_location.ml lm_map.ml lm_parser.ml lm_position.ml lm_set.ml lm_symbol.ml omake_value_type.ml omake_cache_type.ml omake_ir.ml omake_node.ml omake_env.ml
@@ -435,13 +439,13 @@ omake_gen_magic.ml: $(SRC_magic)$(slash)omake_gen_magic.ml
 ALLFILES_magic = omake_gen_magic.ml
 
 
-CMOFILES_ir = omake_options.cmo omake_symbol.cmo omake_state.cmo omake_node_type.cmo omake_node_sig.cmo omake_node.cmo omake_install.cmo omake_ir.cmo omake_var.cmo omake_ir_util.cmo omake_ir_print.cmo omake_ir_free_vars.cmo omake_lexer.cmo omake_parser.cmo omake_value_type.cmo omake_command_type.cmo omake_value_util.cmo omake_value_print.cmo omake_pos.cmo omake_shell_type.cmo omake_command.cmo omake_cache_type.cmo omake_cache.cmo
+CMXFILES_ir = omake_options.cmx omake_symbol.cmx omake_state.cmx omake_node_type.cmx omake_node_sig.cmx omake_node.cmx omake_install.cmx omake_ir.cmx omake_var.cmx omake_ir_util.cmx omake_ir_print.cmx omake_ir_free_vars.cmx omake_lexer.cmx omake_parser.cmx omake_value_type.cmx omake_command_type.cmx omake_value_util.cmx omake_value_print.cmx omake_pos.cmx omake_shell_type.cmx omake_command.cmx omake_cache_type.cmx omake_cache.cmx
 OCAML_LIB_FLAGS_ir =
 
-ir.cma: $(CMOFILES_ir)
-	$(OCAMLC) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_ir) -a -o $@ $(CMOFILES_ir)
+ir.cmxa: $(CMXFILES_ir)
+	$(OCAMLOPT) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_ir) -a -o $@ $(CMXFILES_ir)
 
-omake_options.cmo omake_symbol.cmo omake_state.cmo omake_node_type.cmo omake_node_sig.cmo omake_node.cmo omake_install.cmo omake_ir.cmo omake_var.cmo omake_ir_util.cmo omake_ir_print.cmo omake_ir_free_vars.cmo omake_lexer.cmo omake_parser.cmo omake_value_type.cmo omake_command_type.cmo omake_value_util.cmo omake_value_print.cmo omake_pos.cmo omake_shell_type.cmo omake_command.cmo omake_cache_type.cmo omake_cache.cmo omake_options.cmi omake_state.cmi omake_node.cmi omake_install.cmi omake_var.cmi omake_ir_print.cmi omake_ir_free_vars.cmi omake_command_type.cmi omake_value_util.cmi omake_value_print.cmi omake_pos.cmi omake_command.cmi omake_cache.cmi: magic.cma
+omake_options.cmx omake_symbol.cmx omake_state.cmx omake_node_type.cmx omake_node_sig.cmx omake_node.cmx omake_install.cmx omake_ir.cmx omake_var.cmx omake_ir_util.cmx omake_ir_print.cmx omake_ir_free_vars.cmx omake_lexer.cmx omake_parser.cmx omake_value_type.cmx omake_command_type.cmx omake_value_util.cmx omake_value_print.cmx omake_pos.cmx omake_shell_type.cmx omake_command.cmx omake_cache_type.cmx omake_cache.cmx omake_options.cmi omake_state.cmi omake_node.cmi omake_install.cmi omake_var.cmi omake_ir_print.cmi omake_ir_free_vars.cmi omake_command_type.cmi omake_value_util.cmi omake_value_print.cmi omake_pos.cmi omake_command.cmi omake_cache.cmi: magic.cmxa
 
 SRC_ir = ..$(slash)src$(slash)ir
 
@@ -556,11 +560,11 @@ omake_var.mli: $(SRC_ir)$(slash)omake_var.mli
 ALLFILES_ir = omake_cache.ml omake_cache.mli omake_cache_type.ml omake_command.ml omake_command.mli omake_command_type.ml omake_command_type.mli omake_install.ml omake_install.mli omake_ir.ml omake_ir_free_vars.ml omake_ir_free_vars.mli omake_ir_print.ml omake_ir_print.mli omake_ir_util.ml omake_lexer.ml omake_node.ml omake_node.mli omake_node_sig.ml omake_node_type.ml omake_options.ml omake_options.mli omake_parser.ml omake_pos.ml omake_pos.mli omake_shell_type.ml omake_state.ml omake_state.mli omake_symbol.ml omake_value_print.ml omake_value_print.mli omake_value_type.ml omake_value_util.ml omake_value_util.mli omake_var.ml omake_var.mli
 
 
-CMOFILES_exec = omake_exec_id.cmo omake_exec_type.cmo omake_exec_print.cmo omake_exec_util.cmo omake_exec_local.cmo omake_exec_remote.cmo omake_exec_notify.cmo omake_exec.cmo
+CMXFILES_exec = omake_exec_id.cmx omake_exec_type.cmx omake_exec_print.cmx omake_exec_util.cmx omake_exec_local.cmx omake_exec_remote.cmx omake_exec_notify.cmx omake_exec.cmx
 OCAML_LIB_FLAGS_exec =
 
-exec.cma: $(CMOFILES_exec)
-	$(OCAMLC) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_exec) -a -o $@ $(CMOFILES_exec)
+exec.cmxa: $(CMXFILES_exec)
+	$(OCAMLOPT) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_exec) -a -o $@ $(CMXFILES_exec)
 
 SRC_exec = ..$(slash)src$(slash)exec
 
@@ -612,11 +616,11 @@ omake_exec_util.mli: $(SRC_exec)$(slash)omake_exec_util.mli
 ALLFILES_exec = omake_exec.ml omake_exec.mli omake_exec_id.ml omake_exec_id.mli omake_exec_local.ml omake_exec_local.mli omake_exec_notify.ml omake_exec_notify.mli omake_exec_print.ml omake_exec_print.mli omake_exec_remote.ml omake_exec_remote.mli omake_exec_type.ml omake_exec_util.ml omake_exec_util.mli
 
 
-CMOFILES_ast = omake_ast.cmo omake_ast_util.cmo omake_ast_print.cmo
+CMXFILES_ast = omake_ast.cmx omake_ast_util.cmx omake_ast_print.cmx
 OCAML_LIB_FLAGS_ast =
 
-ast.cma: $(CMOFILES_ast)
-	$(OCAMLC) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_ast) -a -o $@ $(CMOFILES_ast)
+ast.cmxa: $(CMXFILES_ast)
+	$(OCAMLOPT) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_ast) -a -o $@ $(CMXFILES_ast)
 
 SRC_ast = ..$(slash)src$(slash)ast
 
@@ -638,33 +642,33 @@ omake_ast_util.mli: $(SRC_ast)$(slash)omake_ast_util.mli
 ALLFILES_ast = omake_ast.ml omake_ast_print.ml omake_ast_print.mli omake_ast_util.ml omake_ast_util.mli
 
 
-CMOFILES_omake_gen_parse = omake_gen_parse.cmo
+CMXFILES_omake_gen_parse = omake_gen_parse.cmx
 OCAML_LIBS_omake_gen_parse =
-OCAML_OTHER_LIBS_omake_gen_parse = unix.cma
+OCAML_OTHER_LIBS_omake_gen_parse = unix.cmxa
 OCAML_CLIBS_omake_gen_parse =
 OCAML_CCLIBS_omake_gen_parse =
 
-omake_gen_parse$(EXE): $(CMOFILES_omake_gen_parse) $(OCAML_LIBS_omake_gen_parse) $(OCAML_CLIBS_omake_gen_parse)
-	$(OCAMLC) $(OCAMLFLAGS) -custom -o $@ $(OCAML_CCLIBS_omake_gen_parse) $(OCAML_OTHER_LIBS_omake_gen_parse) $(THREADSLIB) $(OCAML_LIBS_omake_gen_parse) $(CMOFILES_omake_gen_parse)
+omake_gen_parse$(EXE): $(CMXFILES_omake_gen_parse) $(OCAML_LIBS_omake_gen_parse) $(OCAML_CLIBS_omake_gen_parse)
+	$(OCAMLOPT) $(OCAMLFLAGS) -o $@ $(OCAML_CCLIBS_omake_gen_parse) $(OCAML_OTHER_LIBS_omake_gen_parse) $(THREADSLIB) $(OCAML_LIBS_omake_gen_parse) $(CMXFILES_omake_gen_parse)
 
-CMOFILES_env = omake_env.cmo omake_exn_print.cmo omake_ast_parse.cmo omake_ast_lex.cmo omake_exp_parse.cmo omake_exp_lex.cmo omake_ir_ast.cmo omake_ir_semant.cmo omake_command_digest.cmo
+CMXFILES_env = omake_env.cmx omake_exn_print.cmx omake_ast_parse.cmx omake_ast_lex.cmx omake_exp_parse.cmx omake_exp_lex.cmx omake_ir_ast.cmx omake_ir_semant.cmx omake_command_digest.cmx
 OCAML_LIB_FLAGS_env =
 
-env.cma: $(CMOFILES_env)
-	$(OCAMLC) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_env) -a -o $@ $(CMOFILES_env)
+env.cmxa: $(CMXFILES_env)
+	$(OCAMLOPT) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_env) -a -o $@ $(CMXFILES_env)
 
 GENPARSE = omake_gen_parse
 omake_ast_parse.mly: $(GENPARSE)$(EXE) omake_ast_parse.input
 	$(DOT)$(GENPARSE) -o $@ omake_ast_parse.input
 
 omake_ast_lex.ml: omake_ast_lex.mll
-omake_ast_lex.cmo: omake_ast_lex.cmi
+omake_ast_lex.cmx: omake_ast_lex.cmi
 omake_ast_parse.ml: omake_ast_parse.mly
 omake_ast_parse.mli: omake_ast_parse.mly
-omake_ast_parse.cmo: omake_ast_parse.cmi
+omake_ast_parse.cmx: omake_ast_parse.cmi
 omake_exp_parse.ml: omake_exp_parse.mly
 omake_exp_parse.mli: omake_exp_parse.mly
-omake_exp_parse.cmo: omake_exp_parse.cmi
+omake_exp_parse.cmx: omake_exp_parse.cmi
 
 omake_ast_lex.mll: ..$(slash)src$(slash)env$(slash)omake_ast_lex.mll
 	$(LN) ..$(slash)src$(slash)env$(slash)omake_ast_lex.mll omake_ast_lex.mll
@@ -675,7 +679,7 @@ omake_ast_parse.input: ..$(slash)src$(slash)env$(slash)omake_ast_parse.input
 omake_exp_parse.mly: ..$(slash)src$(slash)env$(slash)omake_exp_parse.mly
 	$(LN) ..$(slash)src$(slash)env$(slash)omake_exp_parse.mly omake_exp_parse.mly
 
-omake_env.cmo omake_exn_print.cmo omake_ast_parse.cmo omake_ast_lex.cmo omake_exp_parse.cmo omake_exp_lex.cmo omake_ir_ast.cmo omake_ir_semant.cmo omake_command_digest.cmo omake_env.cmi omake_exn_print.cmi omake_ast_parse.cmi omake_ast_lex.cmi omake_exp_parse.cmi omake_exp_lex.cmi omake_ir_ast.cmi omake_ir_semant.cmi omake_command_digest.cmi: magic.cma
+omake_env.cmx omake_exn_print.cmx omake_ast_parse.cmx omake_ast_lex.cmx omake_exp_parse.cmx omake_exp_lex.cmx omake_ir_ast.cmx omake_ir_semant.cmx omake_command_digest.cmx omake_env.cmi omake_exn_print.cmi omake_ast_parse.cmi omake_ast_lex.cmi omake_exp_parse.cmi omake_exp_lex.cmi omake_ir_ast.cmi omake_ir_semant.cmi omake_command_digest.cmi: magic.cmxa
 
 Makefile.dep: omake_ast_lex.ml omake_ast_parse.mly omake_ast_parse.mli omake_ast_parse.ml omake_exp_parse.ml omake_exp_parse.mli
 
@@ -726,15 +730,15 @@ omake_ir_semant.mli: $(SRC_env)$(slash)omake_ir_semant.mli
 ALLFILES_env = omake_ast_lex.mli omake_command_digest.ml omake_command_digest.mli omake_env.ml omake_env.mli omake_exn_print.ml omake_exn_print.mli omake_exp_lex.ml omake_exp_lex.mli omake_gen_parse.ml omake_ir_ast.ml omake_ir_ast.mli omake_ir_semant.ml omake_ir_semant.mli omake_ast_lex.mll omake_ast_parse.input omake_exp_parse.mly
 
 
-CMOFILES_shell = omake_shell_parse.cmo omake_shell_lex.cmo omake_shell_spawn.cmo omake_shell_sys_type.cmo omake_shell_sys.cmo omake_shell_job.cmo omake_shell_completion.cmo
+CMXFILES_shell = omake_shell_parse.cmx omake_shell_lex.cmx omake_shell_spawn.cmx omake_shell_sys_type.cmx omake_shell_sys.cmx omake_shell_job.cmx omake_shell_completion.cmx
 OCAML_LIB_FLAGS_shell =
 
-shell.cma: $(CMOFILES_shell)
-	$(OCAMLC) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_shell) -a -o $@ $(CMOFILES_shell)
+shell.cmxa: $(CMXFILES_shell)
+	$(OCAMLOPT) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_shell) -a -o $@ $(CMXFILES_shell)
 
 omake_shell_parse.ml: omake_shell_parse.mly
 omake_shell_parse.mli: omake_shell_parse.mly
-omake_shell_parse.cmo: omake_shell_parse.cmi
+omake_shell_parse.cmx: omake_shell_parse.cmi
 
 omake_shell_parse.mly: ..$(slash)src$(slash)shell$(slash)omake_shell_parse.mly
 	$(LN) ..$(slash)src$(slash)shell$(slash)omake_shell_parse.mly omake_shell_parse.mly
@@ -779,11 +783,11 @@ omake_shell_sys_type.ml: $(SRC_shell)$(slash)omake_shell_sys_type.ml
 ALLFILES_shell = omake_shell_completion.ml omake_shell_completion.mli omake_shell_job.ml omake_shell_job.mli omake_shell_lex.ml omake_shell_lex.mli omake_shell_spawn.ml omake_shell_spawn.mli omake_shell_sys.mli omake_shell_sys_type.ml omake_shell_parse.mly omake_shell_sys.ml
 
 
-CMOFILES_eval = omake_eval.cmo omake_value.cmo
+CMXFILES_eval = omake_eval.cmx omake_value.cmx
 OCAML_LIB_FLAGS_eval =
 
-eval.cma: $(CMOFILES_eval)
-	$(OCAMLC) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_eval) -a -o $@ $(CMOFILES_eval)
+eval.cmxa: $(CMXFILES_eval)
+	$(OCAMLOPT) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_eval) -a -o $@ $(CMXFILES_eval)
 
 SRC_eval = ..$(slash)src$(slash)eval
 
@@ -802,13 +806,13 @@ omake_value.mli: $(SRC_eval)$(slash)omake_value.mli
 ALLFILES_eval = omake_eval.ml omake_eval.mli omake_value.ml omake_value.mli
 
 
-CMOFILES_build = omake_rule.cmo omake_build_type.cmo omake_build_tee.cmo omake_build_util.cmo omake_builtin_type.cmo omake_target.cmo omake_builtin.cmo omake_build.cmo
+CMXFILES_build = omake_rule.cmx omake_build_type.cmx omake_build_tee.cmx omake_build_util.cmx omake_builtin_type.cmx omake_target.cmx omake_builtin.cmx omake_build.cmx
 OCAML_LIB_FLAGS_build =
 
-build.cma: $(CMOFILES_build)
-	$(OCAMLC) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_build) -a -o $@ $(CMOFILES_build)
+build.cmxa: $(CMXFILES_build)
+	$(OCAMLOPT) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_build) -a -o $@ $(CMXFILES_build)
 
-omake_rule.cmo omake_build_type.cmo omake_build_tee.cmo omake_build_util.cmo omake_builtin_type.cmo omake_target.cmo omake_builtin.cmo omake_build.cmo omake_rule.cmi omake_build_tee.cmi omake_build_util.cmi omake_target.cmi omake_builtin.cmi omake_build.cmi: magic.cma
+omake_rule.cmx omake_build_type.cmx omake_build_tee.cmx omake_build_util.cmx omake_builtin_type.cmx omake_target.cmx omake_builtin.cmx omake_build.cmx omake_rule.cmi omake_build_tee.cmi omake_build_util.cmi omake_target.cmi omake_builtin.cmi omake_build.cmi: magic.cmxa
 
 SRC_build = ..$(slash)src$(slash)build
 
@@ -857,13 +861,13 @@ omake_target.mli: $(SRC_build)$(slash)omake_target.mli
 ALLFILES_build = omake_build.ml omake_build.mli omake_build_tee.ml omake_build_tee.mli omake_build_type.ml omake_build_util.ml omake_build_util.mli omake_builtin.ml omake_builtin.mli omake_builtin_type.ml omake_rule.ml omake_rule.mli omake_target.ml omake_target.mli
 
 
-CMOFILES_builtin = omake_printf.cmo omake_builtin_util.cmo omake_builtin_base.cmo omake_builtin_arith.cmo omake_builtin_file.cmo omake_builtin_fun.cmo omake_builtin_io.cmo omake_builtin_io_fun.cmo omake_builtin_sys.cmo omake_builtin_target.cmo omake_builtin_shell.cmo omake_builtin_rule.cmo omake_builtin_object.cmo omake_builtin_test.cmo omake_builtin_ocamldep.cmo
+CMXFILES_builtin = omake_printf.cmx omake_builtin_util.cmx omake_builtin_base.cmx omake_builtin_arith.cmx omake_builtin_file.cmx omake_builtin_fun.cmx omake_builtin_io.cmx omake_builtin_io_fun.cmx omake_builtin_sys.cmx omake_builtin_target.cmx omake_builtin_shell.cmx omake_builtin_rule.cmx omake_builtin_object.cmx omake_builtin_test.cmx omake_builtin_ocamldep.cmx
 OCAML_LIB_FLAGS_builtin = -linkall
 
-builtin.cma: $(CMOFILES_builtin)
-	$(OCAMLC) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_builtin) -a -o $@ $(CMOFILES_builtin)
+builtin.cmxa: $(CMXFILES_builtin)
+	$(OCAMLOPT) $(OCAMLFLAGS) $(OCAML_LIB_FLAGS_builtin) -a -o $@ $(CMXFILES_builtin)
 
-omake_printf.cmo omake_builtin_util.cmo omake_builtin_base.cmo omake_builtin_arith.cmo omake_builtin_file.cmo omake_builtin_fun.cmo omake_builtin_io.cmo omake_builtin_io_fun.cmo omake_builtin_sys.cmo omake_builtin_target.cmo omake_builtin_shell.cmo omake_builtin_rule.cmo omake_builtin_object.cmo omake_builtin_test.cmo omake_builtin_ocamldep.cmo omake_printf.cmi omake_builtin_util.cmi omake_builtin_base.cmi omake_builtin_arith.cmi omake_builtin_file.cmi omake_builtin_fun.cmi omake_builtin_io.cmi omake_builtin_io_fun.cmi omake_builtin_sys.cmi omake_builtin_target.cmi omake_builtin_shell.cmi omake_builtin_rule.cmi omake_builtin_object.cmi omake_builtin_test.cmi: magic.cma
+omake_printf.cmx omake_builtin_util.cmx omake_builtin_base.cmx omake_builtin_arith.cmx omake_builtin_file.cmx omake_builtin_fun.cmx omake_builtin_io.cmx omake_builtin_io_fun.cmx omake_builtin_sys.cmx omake_builtin_target.cmx omake_builtin_shell.cmx omake_builtin_rule.cmx omake_builtin_object.cmx omake_builtin_test.cmx omake_builtin_ocamldep.cmx omake_printf.cmi omake_builtin_util.cmi omake_builtin_base.cmi omake_builtin_arith.cmi omake_builtin_file.cmi omake_builtin_fun.cmi omake_builtin_io.cmi omake_builtin_io_fun.cmi omake_builtin_sys.cmi omake_builtin_target.cmi omake_builtin_shell.cmi omake_builtin_rule.cmi omake_builtin_object.cmi omake_builtin_test.cmi: magic.cmxa
 
 SRC_builtin = ..$(slash)src$(slash)builtin
 
@@ -957,16 +961,16 @@ omake_printf.mli: $(SRC_builtin)$(slash)omake_printf.mli
 ALLFILES_builtin = omake_builtin_arith.ml omake_builtin_arith.mli omake_builtin_base.ml omake_builtin_base.mli omake_builtin_file.ml omake_builtin_file.mli omake_builtin_fun.ml omake_builtin_fun.mli omake_builtin_io.ml omake_builtin_io.mli omake_builtin_io_fun.ml omake_builtin_io_fun.mli omake_builtin_object.ml omake_builtin_object.mli omake_builtin_ocamldep.ml omake_builtin_rule.ml omake_builtin_rule.mli omake_builtin_shell.ml omake_builtin_shell.mli omake_builtin_sys.ml omake_builtin_sys.mli omake_builtin_target.ml omake_builtin_target.mli omake_builtin_test.ml omake_builtin_test.mli omake_builtin_util.ml omake_builtin_util.mli omake_printf.ml omake_printf.mli
 
 
-CMOFILES_omake = omake_main_util.cmo omake_shell.cmo omake_main.cmo
-OCAML_LIBS_omake = lm.cma frt.cma magic.cma ast.cma ir.cma env.cma exec.cma eval.cma shell.cma build.cma builtin.cma
-OCAML_OTHER_LIBS_omake = unix.cma
+CMXFILES_omake = omake_main_util.cmx omake_shell.cmx omake_main.cmx
+OCAML_LIBS_omake = lm.cmxa frt.cmxa magic.cmxa ast.cmxa ir.cmxa env.cmxa exec.cmxa eval.cmxa shell.cmxa build.cmxa builtin.cmxa
+OCAML_OTHER_LIBS_omake = unix.cmxa
 OCAML_CLIBS_omake = clib$(EXT_LIB)
 OCAML_CCLIBS_omake = -cclib clib$(EXT_LIB)
 
-omake$(EXE): $(CMOFILES_omake) $(OCAML_LIBS_omake) $(OCAML_CLIBS_omake)
-	$(OCAMLC) $(OCAMLFLAGS) -custom -o $@ $(OCAML_CCLIBS_omake) $(OCAML_OTHER_LIBS_omake) $(THREADSLIB) $(OCAML_LIBS_omake) $(CMOFILES_omake)
+omake$(EXE): $(CMXFILES_omake) $(OCAML_LIBS_omake) $(OCAML_CLIBS_omake)
+	$(OCAMLOPT) $(OCAMLFLAGS) -o $@ $(OCAML_CCLIBS_omake) $(OCAML_OTHER_LIBS_omake) $(THREADSLIB) $(OCAML_LIBS_omake) $(CMXFILES_omake)
 
-omake_main_util.cmo omake_shell.cmo omake_main.cmo omake_shell.cmi omake_main.cmi: magic.cma
+omake_main_util.cmx omake_shell.cmx omake_main.cmx omake_shell.cmi omake_main.cmi: magic.cmxa
 
 SRC_main = ..$(slash)src$(slash)main
 
@@ -999,7 +1003,7 @@ Makefile.dep: $(ALLFILES)
 # Clean up
 #
 clean:
-	$(RM) *.cmo *.cmx *.cma *.cmxa *.o *.obj *.a *.lib *.exe
+	$(RM) *.cmo *.cmx *.cma *.cmxa *.o *.obj *.a *.lib *.exe *.co
 	$(RM) $(ALLFILES)
 	$(RM) omake
 
