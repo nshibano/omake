@@ -58,8 +58,9 @@ MakeConfig(CONFIG_FILE) =
 # following directories.
 #    BINDIR: program executables
 #    LIBDIR: omake standard library
-#
-PREFIX = $$(dir $$'$(PREFIX)')
+
+# PREFIX = $$(dir $$'$(PREFIX)')
+PREFIX = $(PREFIX)
 BINDIR = $$(dir $$"$(BINDIR)")
 LIBDIR = $$(dir $$"$(LIBDIR)")
 
