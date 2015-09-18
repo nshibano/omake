@@ -21,11 +21,10 @@ public.PREFIX =
                 else
                     value $(if $(equal $(OSTYPE), Win32), C:\OMake, /usr/local)
 
-public.PREFIX = $(shell cygpath -m $(getenv PREFIX))
-public.BINDIR = $(getenv BINDIR, $(PREFIX)/bin)
-public.LIBDIR = $(getenv LIBDIR, $(PREFIX)/lib)
+PREFIX = $(dir $"$(PREFIX)")
 
-eprintln("PREFIX = $(PREFIX)")
+public.BINDIR = $(dir $"$(getenv BINDIR, $(PREFIX)/bin)")
+public.LIBDIR = $(dir $"$(getenv LIBDIR, $(PREFIX)/lib)")
 
 public.DEFAULT_SAVE_INTERVAL = $(if $(equal $(OSTYPE), Win32), 15, 60)
 
@@ -68,20 +67,17 @@ if $(file-exists $(CONFIG_FILE))
     include $(CONFIG_FILE)
     export
 
-# PREFIX = $(dir $"$(PREFIX)")
-PREFIX = $(PREFIX)
-BINDIR = $(BINDIR)
-LIBDIR = $(LIBDIR)
+PREFIX = $(dir $"$(PREFIX)")
+BINDIR = $(dir $"$(BINDIR)")
+LIBDIR = $(dir $"$(LIBDIR)")
 
 #
 # XXX This is a big hack.
 #
 section
-#   PREFIX = $(dir $(PREFIX))
-   PREFIX = $(PREFIX)
+   PREFIX = $(dir $(shell cygpath -m $(PREFIX)))
    INSTALL_ROOT = $(getenv INSTALL_ROOT, $(EMPTY))
-#   INSTALL_PREFIX = $(dir $(getenv PREFIX, $(PREFIX)))
-   INSTALL_PREFIX = $(shell cygpath -m $(getenv PREFIX, $(PREFIX)))
+   INSTALL_PREFIX = $(dir $(shell cygpath -m $(getenv PREFIX, $(PREFIX))))
 
    if $(INSTALL_ROOT)
       INSTALL_BINDIR=$(dir $(INSTALL_ROOT)$(absname $(BINDIR)))
@@ -98,13 +94,8 @@ section
    make sure your PREFIX variables agree or remove the PREFIX variable from your
    environment.
 """)
-#      INSTALL_BINDIR=$(dir $(getenv BINDIR, $(INSTALL_PREFIX)/bin))
-      INSTALL_BINDIR=$(getenv BINDIR, $(INSTALL_PREFIX)/bin)
+      INSTALL_BINDIR=$(dir $(getenv BINDIR, $(INSTALL_PREFIX)/bin))
       INSTALL_LIBDIR=$(dir $(getenv LIBDIR, $(INSTALL_PREFIX)/lib))
-      eprintln($"""BINDIR= $(BINDIR)""")
-      eprintln($"""INSTALL_PREFIX= $(INSTALL_PREFIX)""")
-      eprintln($"""INSTALL_BINDIR= $(INSTALL_BINDIR)""")
-      exit 1
       export
    else
       INSTALL_BINDIR=$(dir $(getenv BINDIR, $(BINDIR)))

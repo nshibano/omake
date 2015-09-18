@@ -41,7 +41,9 @@ all:
 all-after-boot:
 	touch .config
 	OMAKEFLAGS= OMAKEPATH=lib ./omake-boot --dotomake .omake --force-dotomake  main
-	OMAKEFLAGS= OMAKEPATH=lib src/main/omake --dotomake .omake --force-dotomake  all
+        # src/main/omake.exe cannot be used since it is going to overwrite
+	cp src/main/omake.exe src/main/omake_.exe
+	OMAKEFLAGS= OMAKEPATH=lib src/main/omake_.exe --dotomake .omake --force-dotomake  all
 
 all-non-boot:
 	@echo "*********************************************"

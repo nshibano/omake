@@ -1009,7 +1009,7 @@ Makefile.dep: $(ALLFILES)
 clean:
 	$(RM) *.cmo *.cmx *.cma *.cmxa *.o *.obj *.a *.lib *.exe *.co
 	$(RM) $(ALLFILES)
-	$(RM) omake
+	$(RM) omake$(EXE)
 
 
 include Makefile.dep
