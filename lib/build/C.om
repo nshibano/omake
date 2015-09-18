@@ -99,10 +99,7 @@ protected.toolchain-derive(cc, command, fallback) =
     empty = $(array)
     match $(cc)
     case $"\(.*\)-g?cc"
-        eprintln("command $1 $(command)")
-        # This is wrong!  fullcmd = $(concat $(empty), $1, $(command))
         fullcmd = $(concat -, $1 $(command))
-        eprintln("fullcmd $(fullcmd)")
         if $(exists-in-path $(fullcmd))
             return $(fullcmd)
         else

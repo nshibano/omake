@@ -26,7 +26,7 @@ bootstrap: boot/Makefile
 
 bootstrap-mingw:
 	@$(MAKE) boot/Makefile LN=cp
-	@CC=`ocamlc -config | grep bytecomp_c_compiler | awk '{print $$2}'`; cd boot; $(MAKE) Makefile.dep LN=cp win32=win32 system=system; $(MAKE) omake.exe LN=cp OCAMLFLAGS_EXTRA=-thread THREADSLIB=threads.cma EXE=.exe "CC=$$CC" win32=win32 system=system
+	@CC=`ocamlc -config | grep bytecomp_c_compiler | awk '{print $$2}'`; cd boot; $(MAKE) Makefile.dep LN=cp win32=win32 system=system; $(MAKE) omake.exe LN=cp OCAMLFLAGS_EXTRA=-thread THREADSLIB=threads.cmxa EXE=.exe "CC=$$CC" win32=win32 system=system
 	@cp boot/omake omake-boot
 
 boot/Makefile: src/Makefile
@@ -41,10 +41,7 @@ all:
 all-after-boot:
 	touch .config
 	OMAKEFLAGS= OMAKEPATH=lib ./omake-boot --dotomake .omake --force-dotomake  main
-	# This tries to build src/main/omake.exe, which is not good
-	# OMAKEFLAGS= OMAKEPATH=lib src/main/omake --dotomake .omake --force-dotomake all
-	mv src/main/omake.exe src/main/omake_.exe
-	OMAKEFLAGS= OMAKEPATH=lib src/main/omake_.exe --dotomake .omake --force-dotomake all
+	OMAKEFLAGS= OMAKEPATH=lib src/main/omake --dotomake .omake --force-dotomake  all
 
 all-non-boot:
 	@echo "*********************************************"

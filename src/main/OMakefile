@@ -60,7 +60,7 @@ clean:
 #
 # Generate a Makefile
 #
-MakeOCamlDepend($(FILES), magic.cma)
+MakeOCamlDepend($(FILES), magic.cmxa)
 MakeMakefile()
 
 #
