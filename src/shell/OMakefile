@@ -40,7 +40,7 @@ win32 = $'$(win32)'
 MAKEFILE_TEXT += $"""
 omake_shell_parse.ml: omake_shell_parse.mly
 omake_shell_parse.mli: omake_shell_parse.mly
-omake_shell_parse.cmo: omake_shell_parse.cmi
+omake_shell_parse.cmx: omake_shell_parse.cmi
 """
 
 MakeLinkFiles(omake_shell_parse.mly)

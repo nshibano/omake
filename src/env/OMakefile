@@ -60,16 +60,16 @@ omake_ast_parse.mly: $$(GENPARSE)$$(EXE) omake_ast_parse.input
 	$$(DOT)$$(GENPARSE) -o $$@ omake_ast_parse.input
 
 omake_ast_lex.ml: omake_ast_lex.mll
-omake_ast_lex.cmo: omake_ast_lex.cmi
+omake_ast_lex.cmx: omake_ast_lex.cmi
 omake_ast_parse.ml: omake_ast_parse.mly
 omake_ast_parse.mli: omake_ast_parse.mly
-omake_ast_parse.cmo: omake_ast_parse.cmi
+omake_ast_parse.cmx: omake_ast_parse.cmi
 omake_exp_parse.ml: omake_exp_parse.mly
 omake_exp_parse.mli: omake_exp_parse.mly
-omake_exp_parse.cmo: omake_exp_parse.cmi
+omake_exp_parse.cmx: omake_exp_parse.cmi
 """
 
 MakeLinkFiles(omake_ast_lex.mll omake_ast_parse.input omake_exp_parse.mly)
 MakeDontLink($(GENERATED_FILES))
-MakeOCamlDepend($(FILES), magic.cma)
+MakeOCamlDepend($(FILES), magic.cmxa)
 MakeMakefile()

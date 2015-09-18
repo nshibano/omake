@@ -24,16 +24,20 @@ CFLAGS =
 AR = `ocamlc -config | grep 'ranlib:' | sed -e 's/ranlib: //' -e 's/ranlib/ar/'`
 AR := $(AR) cq
 AROUT =
+# We have x.ml and x.c. To avoid the collision of ocamlopt x.ml and $(CC) x.c,
+# we need to rename the object of C
 EXT_OBJ = .co
 EXT_LIB = .a
 EXE =
 CCOMPTYPE = cc
 
 OCAMLFLAGS = -w +a-4-32-30-42-40-41 -g $(OCAMLFLAGS_EXTRA)
-THREADSLIB = thrads.cmxa
+THREADSLIB =
 
 .SUFFIXES: .mll .mly .mli .ml .c .cmi .cmo .cma .o .cmx .cmxa .co
 
+# We have x.ml and x.c. To avoid the collision of ocamlopt x.ml and $(CC) x.c,
+# we need to rename the object of C
 .c.co:
 	inc=`ocamlc -where | tr -d '\015'`; $(CC) $(CFLAGS) -I"$$inc" -I"$$inc/caml" -o $*$(EXT_OBJ) -c $*.c
 

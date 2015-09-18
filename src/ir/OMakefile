@@ -39,5 +39,5 @@ clean:
 #
 # Generate the Makefile
 #
-MakeOCamlDepend($(FILES), magic.cma)
+MakeOCamlDepend($(FILES), magic.cmxa)
 MakeMakefile()

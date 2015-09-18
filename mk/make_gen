@@ -99,22 +99,22 @@ MakeOCamlProgram(name, files) =
 
     private.mlfiles = $(addsuffix .ml, $(files))
     private.mlifiles = $(filter-exists $(addsuffix .mli, $(files)))
-    private.cmofiles = $(addsuffix .cmo, $(files))
-    private.ocaml_libs = $(addsuffix .cma, $(basename $(OCAML_LIBS)))
-    private.ocaml_other_libs = $(addsuffix .cma, $(OCAML_OTHER_LIBS))
-    private.ocaml_other_libs = $(set-diff $(ocaml_other_libs), threads.cma)
+    private.cmxfiles = $(addsuffix .cmx, $(files))
+    private.ocaml_libs = $(addsuffix .cmxa, $(basename $(OCAML_LIBS)))
+    private.ocaml_other_libs = $(addsuffix .cmxa, $(OCAML_OTHER_LIBS))
+    private.ocaml_other_libs = $(set-diff $(ocaml_other_libs), threads.cmxa)
     private.ocaml_clibs = $(addsuffix $(ext_lib), $(basename $(OCAML_CLIBS)))
     private.ocaml_cclibs = $(mapprefix -cclib, $(ocaml_clibs))
     MAKEFILE_LINK += $(mlfiles) $(mlifiles)
     MAKEFILE_TEXT += $"""
-CMOFILES_$(name) = $(cmofiles)
+CMXFILES_$(name) = $(cmxfiles)
 OCAML_LIBS_$(name) = $(ocaml_libs)
 OCAML_OTHER_LIBS_$(name) = $(ocaml_other_libs)
 OCAML_CLIBS_$(name) = $(ocaml_clibs)
 OCAML_CCLIBS_$(name) = $(ocaml_cclibs)
 
-$(name)$$(EXE): $$(CMOFILES_$(name)) $$(OCAML_LIBS_$(name)) $$(OCAML_CLIBS_$(name))
-	$$(OCAMLC) $$(OCAMLFLAGS) -custom -o $$@ $$(OCAML_CCLIBS_$(name)) $$(OCAML_OTHER_LIBS_$(name)) $$(THREADSLIB) $$(OCAML_LIBS_$(name)) $$(CMOFILES_$(name))
+$(name)$$(EXE): $$(CMXFILES_$(name)) $$(OCAML_LIBS_$(name)) $$(OCAML_CLIBS_$(name))
+	$$(OCAMLOPT) $$(OCAMLFLAGS) -o $$@ $$(OCAML_CCLIBS_$(name)) $$(OCAML_OTHER_LIBS_$(name)) $$(THREADSLIB) $$(OCAML_LIBS_$(name)) $$(CMXFILES_$(name))
 """
     export
 
@@ -126,14 +126,14 @@ MakeOCamlLibrary(name, files) =
 
     private.mlfiles = $(addsuffix .ml, $(files))
     private.mlifiles = $(filter-exists $(addsuffix .mli, $(files)))
-    private.cmofiles = $(addsuffix .cmo, $(files))
+    private.cmxfiles = $(addsuffix .cmx, $(files))
     MAKEFILE_LINK += $(mlfiles) $(mlifiles)
     MAKEFILE_TEXT += $"""
-CMOFILES_$(name) = $(cmofiles)
+CMXFILES_$(name) = $(cmxfiles)
 OCAML_LIB_FLAGS_$(name) = $(OCAML_LIB_FLAGS)
 
-$(name).cma: $$(CMOFILES_$(name))
-	$$(OCAMLC) $$(OCAMLFLAGS) $$(OCAML_LIB_FLAGS_$(name)) -a -o $$@ $$(CMOFILES_$(name))
+$(name).cmxa: $$(CMXFILES_$(name))
+	$$(OCAMLOPT) $$(OCAMLFLAGS) $$(OCAML_LIB_FLAGS_$(name)) -a -o $$@ $$(CMXFILES_$(name))
 """
     export
 
@@ -142,10 +142,10 @@ $(name).cma: $$(CMOFILES_$(name))
 #
 MakeOCamlDepend(files, deps) =
     private.mlifiles = $(filter-exists $(addsuffix .mli, $(files)))
-    private.cmofiles = $(addsuffix .cmo, $(files))
+    private.cmxfiles = $(addsuffix .cmx, $(files))
     private.cmifiles = $(addsuffix .cmi, $(removesuffix $(mlifiles)))
     MAKEFILE_TEXT += $"""
-$(cmofiles) $(cmifiles): $(deps)
+$(cmxfiles) $(cmifiles): $(deps)
 """
     export
 
@@ -232,7 +232,9 @@ CFLAGS =
 AR = `ocamlc -config | grep 'ranlib:' | sed -e 's/ranlib: //' -e 's/ranlib/ar/'`
 AR := $(AR) cq
 AROUT =
-EXT_OBJ = .o
+# We have x.ml and x.c. To avoid the collision of ocamlopt x.ml and $(CC) x.c,
+# we need to rename the object of C
+EXT_OBJ = .co
 EXT_LIB = .a
 EXE =
 CCOMPTYPE = cc
@@ -240,10 +242,12 @@ CCOMPTYPE = cc
 OCAMLFLAGS = -w +a-4-32-30-42-40-41 -g $(OCAMLFLAGS_EXTRA)
 THREADSLIB =
 
-.SUFFIXES: .mll .mly .mli .ml .c .cmi .cmo .cma .o
+.SUFFIXES: .mll .mly .mli .ml .c .cmi .cmo .cma .o .cmx .cmxa .co
 
-.c.o:
-	inc=`ocamlc -where | tr -d '\015'`; $(CC) $(CFLAGS) -I"$$inc" -I"$$inc/caml" -c $*.c
+# We have x.ml and x.c. To avoid the collision of ocamlopt x.ml and $(CC) x.c,
+# we need to rename the object of C
+.c.co:
+	inc=`ocamlc -where | tr -d '\015'`; $(CC) $(CFLAGS) -I"$$inc" -I"$$inc/caml" -o $*$(EXT_OBJ) -c $*.c
 '''
 
 private.MAKEFILE_HEAD_NT = $'''#
@@ -274,9 +278,9 @@ EXE = .exe
 CCOMPTYPE = msvc
 
 OCAMLFLAGS = -thread -w +a-4-32-30-42-40-41 -g $(OCAMLFLAGS_EXTRA)
-THREADSLIB = threads.cma
+THREADSLIB = threads.cmxa
 
-.SUFFIXES: .mll .mly .mli .ml .cmi .cmo
+.SUFFIXES: .mll .mly .mli .ml .cmi .cmo .cmx
 
 .c.obj:
 	$(CC) $(CFLAGS) -c $*.c
@@ -287,6 +291,7 @@ private.MAKEFILE_HEAD_COMMON = $'''
 # OCaml configuration
 #
 OCAMLC = ocamlc.opt
+OCAMLOPT = ocamlopt.opt
 OCAMLYACC = ocamlyacc
 OCAMLLEX = ocamllex.opt
 OCAMLDEP = ocamldep.opt
@@ -304,6 +309,9 @@ OCAMLDEP = ocamldep.opt
 
 .ml.cmo:
 	$(OCAMLC) $(OCAMLFLAGS) -c $*.ml
+
+.ml.cmx:
+	$(OCAMLOPT) $(OCAMLFLAGS) -c $*.ml
 
 #
 # The version.txt file
@@ -323,7 +331,7 @@ Makefile.dep: $(ALLFILES)
 # Clean up
 #
 clean:
-	$(RM) *.cmo *.cmx *.cma *.cmxa *.o *.obj *.a *.lib *.exe
+	$(RM) *.cmo *.cmx *.cma *.cmxa *.o *.obj *.a *.lib *.exe *.co
 	$(RM) $(ALLFILES)
 	$(RM) omake
 '''
