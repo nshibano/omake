@@ -1,6 +1,6 @@
 LN = ln -sf
 
-PREFIX:=$(shell cygpath -m $(PREFIX))
+MINGW_PREFIX = $(shell cygpath -m $(PREFIX))
 
 #
 # For bootstrapping
@@ -42,22 +42,22 @@ all:
 
 all-after-boot:
 	touch .config
-	OMAKEFLAGS= OMAKEPATH=lib ./omake-boot --dotomake .omake --force-dotomake  main
+	OMAKEFLAGS= OMAKEPATH=lib PREFIX=$(MINGW_PREFIX) ./omake-boot --dotomake .omake --force-dotomake  main
         # src/main/omake.exe cannot be used since it is going to overwrite
 	cp src/main/omake.exe src/main/omake_.exe
-	OMAKEFLAGS= OMAKEPATH=lib src/main/omake_.exe --dotomake .omake --force-dotomake  all
+	OMAKEFLAGS= OMAKEPATH=lib PREIFX=$(MINGW_PREFIX) src/main/omake_.exe --dotomake .omake --force-dotomake  all
 
 all-non-boot:
 	@echo "*********************************************"
 	@echo "WARNING: No omake-boot, using omake from PATH"
 	@echo "*********************************************"
-	OMAKEFLAGS= OMAKEPATH=lib omake --dotomake .omake
+	OMAKEFLAGS= OMAKEPATH=lib PREFIX=$(MINGW_PREFIX) omake --dotomake .omake
 
 install: all
 	@if [ -f ./omake-boot ]; then $(MAKE) install-after-boot; else $(MAKE) install-non-boot; fi
 
 install-after-boot:
-	OMAKEFLAGS= OMAKEPATH=lib src/main/omake --dotomake .omake --force-dotomake  install
+	OMAKEFLAGS= OMAKEPATH=lib $PREFIX=$(MINGW_PREFIX) src/main/omake --dotomake .omake --force-dotomake  install
 
 install-non-boot:
 	OMAKEFLAGS= OMAKEPATH=lib omake --dotomake .omake --force-dotomake  install
