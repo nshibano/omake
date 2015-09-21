@@ -1,5 +1,7 @@
 LN = ln -sf
 
+PREFIX:=$(shell cygpath -m $(PREFIX))
+
 #
 # For bootstrapping
 #
