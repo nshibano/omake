@@ -75,9 +75,9 @@ LIBDIR = $(dir $"$(LIBDIR)")
 # XXX This is a big hack.
 #
 section
-   PREFIX = $(dir $(shell cygpath -m $(PREFIX)))
+   PREFIX = $(dir $(PREFIX))
    INSTALL_ROOT = $(getenv INSTALL_ROOT, $(EMPTY))
-   INSTALL_PREFIX = $(dir $(shell cygpath -m $(getenv PREFIX, $(PREFIX))))
+   INSTALL_PREFIX = $(dir $(getenv PREFIX, $(PREFIX)))
 
    if $(INSTALL_ROOT)
       INSTALL_BINDIR=$(dir $(INSTALL_ROOT)$(absname $(BINDIR)))
