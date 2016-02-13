@@ -9,39 +9,39 @@ let valid_identifier name =
       | '\\' -> '_'
       | c -> c)
 
-let search path =
-  let cwd = Sys.getcwd () in
+let rootdir = Sys.getcwd ()
+
+let rec is_empty = function
+  | Directory (_, children) -> Array.fold_left (fun accu child -> accu && (is_empty child)) true children
+  | File _ -> false
+  
+let search_om_files path =
+  Sys.chdir rootdir;
   Sys.chdir path;
   let rec loop path =
     let accu = ref [] in
     Array.iter (fun name ->
       if Sys.is_directory name then (
         Sys.chdir name;
-        accu := (Directory (name, loop (path ^ "\\" ^ name))) :: !accu;
+        let dir = Directory (name, loop (path ^ "\\" ^ name)) in
+        (if not (is_empty dir) then
+          accu :=  dir :: !accu);
         Sys.chdir "..")
       else if 9 < String.length name && (String.sub name (String.length name - 8) 8) = ".install" then
         let om = (String.sub name 0 (String.length name - 8)) ^ ".om" in
         accu := (File (om, path ^ "\\" ^ name)) :: !accu) (Sys.readdir ".");
     Array.of_list (List.rev !accu) in
-
-  let res = loop path in
-  Sys.chdir cwd;
-  res
+  loop path
   
 let files = [|
   Directory ("bin", [|
     File ("omake.exe", {|src\main\omake.exe|});
     File ("osh.exe", {|src\main\osh.exe|})|]);
   Directory ("lib", [|
-    Directory ("omake", [|
+    Directory ("omake", Array.append [|
       File ("OMakefile.default", {|lib\OMakefile.default|});
-      File ("OMakeroot.default", {|lib\OMakeroot.default|});
-      File ("OMakeroot.om", {|lib\OMakeroot.install|});
-      File ("Pervasives.om", {|lib\Pervasives.install|});
-      Directory ("build", search "lib\\build");
-      Directory ("configure", search "lib\\configure");
-      Directory ("parse", search "lib\\parse");
-      Directory ("web", search "lib\\web");|])|])|] 
+      File ("OMakeroot.default", {|lib\OMakeroot.default|})|]
+      (search_om_files "lib"))|])|]
 
 let print_indent n =
   for _ = 1 to n do
@@ -57,6 +57,7 @@ let rec gen indent = Array.iter (function
       print_indent indent; print_endline (Printf.sprintf {|</Directory>|})
   | File (dst_name, src_path) ->
       let id = valid_identifier src_path in
+      assert (not (List.mem id !components));
       components := id :: !components;
       print_indent indent; print_endline (Printf.sprintf {|<Component Id="%s" Guid="*">|} id);
       print_indent indent; print_endline (Printf.sprintf {|  <File Source="%s" Name="%s" Id="%s" KeyPath="yes"/>|} src_path dst_name ("file_" ^ id));

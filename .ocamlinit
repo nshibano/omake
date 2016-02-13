@@ -1,2 +1,0 @@
-(* -*-mode:caml -*- *)
-#install_printer Lm_symbol.dump_symbol;;
