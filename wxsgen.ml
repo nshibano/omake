@@ -2,11 +2,46 @@ type files =
   | Directory of string * files array
   | File of string * string
 
-let files =
+let valid_identifier name =
+  String.init (String.length name) (fun i ->
+    match name.[i] with
+      | '-' -> '_'
+      | '\\' -> '_'
+      | c -> c)
+
+let search path =
+  let cwd = Sys.getcwd () in
+  Sys.chdir path;
+  let rec loop path =
+    let accu = ref [] in
+    Array.iter (fun name ->
+      if Sys.is_directory name then (
+        Sys.chdir name;
+        accu := (Directory (name, loop (path ^ "\\" ^ name))) :: !accu;
+        Sys.chdir "..")
+      else if 9 < String.length name && (String.sub name (String.length name - 8) 8) = ".install" then
+        let om = (String.sub name 0 (String.length name - 8)) ^ ".om" in
+        accu := (File (om, path ^ "\\" ^ name)) :: !accu) (Sys.readdir ".");
+    Array.of_list (List.rev !accu) in
+
+  let res = loop path in
+  Sys.chdir cwd;
+  res
+  
+let files = [|
   Directory ("bin", [|
     File ("omake.exe", {|src\main\omake.exe|});
-    File ("osh.exe", {|src\main\osh.exe|})
-  |])
+    File ("osh.exe", {|src\main\osh.exe|})|]);
+  Directory ("lib", [|
+    Directory ("omake", [|
+      File ("OMakefile.default", {|lib\OMakefile.default|});
+      File ("OMakeroot.default", {|lib\OMakeroot.default|});
+      File ("OMakeroot.om", {|lib\OMakeroot.install|});
+      File ("Pervasives.om", {|lib\Pervasives.install|});
+      Directory ("build", search "lib\\build");
+      Directory ("configure", search "lib\\configure");
+      Directory ("parse", search "lib\\parse");
+      Directory ("web", search "lib\\web");|])|])|] 
 
 let print_indent n =
   for _ = 1 to n do
@@ -15,16 +50,17 @@ let print_indent n =
 
 let components = ref []
 
-let rec gen indent = function
+let rec gen indent = Array.iter (function
   | Directory (name, files) ->
-      print_indent indent; print_endline (Printf.sprintf {|<Directory Id="%s" Name="%s">|} name name);
-      Array.iter (gen (indent + 1)) files;
+      print_indent indent; print_endline (Printf.sprintf {|<Directory Id="%s" Name="%s">|} (valid_identifier name) name);
+      gen (indent + 1) files;
       print_indent indent; print_endline (Printf.sprintf {|</Directory>|})
   | File (dst_name, src_path) ->
-      components := dst_name :: !components;
-      print_indent indent; print_endline (Printf.sprintf {|<Component Id="%s" Guid="*">|} dst_name);
-      print_indent indent; print_endline (Printf.sprintf {|  <File Source="%s" Name="%s" KeyPath="yes"/>|} src_path dst_name);
-      print_indent indent; print_endline (Printf.sprintf {|</Component>|})
+      let id = valid_identifier src_path in
+      components := id :: !components;
+      print_indent indent; print_endline (Printf.sprintf {|<Component Id="%s" Guid="*">|} id);
+      print_indent indent; print_endline (Printf.sprintf {|  <File Source="%s" Name="%s" Id="%s" KeyPath="yes"/>|} src_path dst_name ("file_" ^ id));
+      print_indent indent; print_endline (Printf.sprintf {|</Component>|}))
 
 let _=
   print_endline {|<?xml version="1.0"?>
