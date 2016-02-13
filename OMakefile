@@ -506,6 +506,15 @@ install: $(DEFAULTFILES)  $(INSTALLFILES)
         mkdir -p $(dirof $(node))
         cp -f -m 444 lib/$(name).install $(node)
 
+.PHONY: msi
+
+msi: omake.msi
+
+omake.msi: wxsgen.ml $(DEFAULTFILES) $(INSTALLFILES)
+  ocaml wxsgen.ml >omake.wxs
+  candle omake.wxs
+  light omake.wixobj
+
 ########################################################################
 # Testing
 #

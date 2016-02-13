@@ -75,3 +75,7 @@ test/targets/Test1/A/
 test/targets/Test3/b
 test/targets/Test5/b
 test/vmount/Test1/build/foo
+omake.msi
+omake.wxs
+omake.wixobj
+omake.wixpdb
