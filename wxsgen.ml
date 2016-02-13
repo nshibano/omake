@@ -71,6 +71,9 @@ let _=
     <Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer Package"/>
     <Media Id="1" Cabinet="product.cab" EmbedCab="yes"/>
     <Directory Id="TARGETDIR" Name="SourceDir">
+      <Component Id="Path" Guid="9d049b77-f575-4ab8-86e0-b397c7acdf81">
+        <Environment Id="PATH" Name="PATH" Value="[OMake]bin" Permanent="no" Part="last" Action="set" System="yes"/>
+      </Component>
       <Directory Id="ProgramFilesFolder">
         <Directory Id="OMake" Name="OMake">|};
   gen 5 files;
@@ -78,7 +81,8 @@ let _=
 {|        </Directory>
       </Directory>
     </Directory>
-    <Feature Id="DefaultFeature" Level="1">|};
+    <Feature Id="DefaultFeature" Level="1">
+      <ComponentRef Id="Path"/>|};
   List.iter (fun s -> print_indent 3; print_endline (Printf.sprintf {|<ComponentRef Id="%s"/>|} s)) !components;
   print_endline
 {|    </Feature>
