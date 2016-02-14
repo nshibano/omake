@@ -27,7 +27,7 @@ let search_om_files path =
         (if not (is_empty dir) then
           accu :=  dir :: !accu);
         Sys.chdir "..")
-      else if 9 < String.length name && (String.sub name (String.length name - 8) 8) = ".install" then
+      else if 8 <= String.length name && (String.sub name (String.length name - 8) 8) = ".install" then
         let om = (String.sub name 0 (String.length name - 8)) ^ ".om" in
         accu := (File (om, path ^ "\\" ^ name)) :: !accu) (Sys.readdir ".");
     Array.of_list (List.rev !accu) in
