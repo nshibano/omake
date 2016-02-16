@@ -513,7 +513,7 @@ install: $(DEFAULTFILES)  $(INSTALLFILES)
 
 msi: omake.msi
 
-omake.msi: wxsgen.ml $(DEFAULTFILES) $(INSTALLFILES)
+omake.msi: wxsgen.ml src/main/omake$(EXE) src/main/osh$(EXE) $(DEFAULTFILES) $(INSTALLFILES)
   ocaml wxsgen.ml >omake.wxs
   candle omake.wxs
   light omake.wixobj
