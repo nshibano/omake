@@ -238,7 +238,8 @@ let filename_string name =
          let root = DriveRoot (Char.lowercase name.[0]) in
          let path = String.sub name 3 (len - 3) in
             AbsolutePath (root, path)
-      else if len >= 1 && name.[0] = '/' then
+      else if len >= 1 && (name.[0] = '/'
+                          || has_drive_letters && name.[0] = '\\') then
          let root = NullRoot in
          let path = String.sub name 1 (len - 1) in
             AbsolutePath (root, path)
