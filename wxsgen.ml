@@ -8,7 +8,7 @@ let valid_identifier name =
       | '-' -> '_'
       | '\\' -> '_'
       | c -> c)
-
+(*
 let rootdir = Sys.getcwd ()
 
 let rec is_empty = function
@@ -42,26 +42,68 @@ let files = [|
       File ("OMakefile.default", {|lib\OMakefile.default|});
       File ("OMakeroot.default", {|lib\OMakeroot.default|})|]
       (search_om_files "lib"))|])|]
+*)
+
+let files =
+  [|Directory ("bin",
+     [|File ("omake.exe", "src\\main\\omake.exe");
+       File ("osh.exe", "src\\main\\osh.exe")|]);
+    Directory ("lib",
+     [|Directory ("omake",
+        [|File ("OMakefile.default", "lib\\OMakefile.default");
+          File ("OMakeroot.default", "lib\\OMakeroot.default");
+          File ("OMakeroot.om", "lib\\OMakeroot.install");
+          File ("Pervasives.om", "lib\\Pervasives.install");
+          Directory ("build",
+           [|File ("C.om", "lib\\build\\C.install");
+             File ("Common.om", "lib\\build\\Common.install");
+             File ("LaTeX.om", "lib\\build\\LaTeX.install");
+             File ("OCaml.om", "lib\\build\\OCaml.install");
+             File ("svn_realclean.om", "lib\\build\\svn_realclean.install")|]);
+          Directory ("configure",
+           [|File ("Configure.om", "lib\\configure\\Configure.install");
+             File ("fam.om", "lib\\configure\\fam.install");
+             File ("fs_case_sensitive.om", "lib\\configure\\fs_case_sensitive.install");
+             File ("moncontrol.om", "lib\\configure\\moncontrol.install");
+             File ("ncurses.om", "lib\\configure\\ncurses.install");
+             File ("posix_spawn.om", "lib\\configure\\posix_spawn.install");
+             File ("readline.om", "lib\\configure\\readline.install");
+             File ("snprintf.om", "lib\\configure\\snprintf.install");
+             File ("X.om", "lib\\configure\\X.install")|]);
+          Directory ("parse",
+           [|Directory ("C",
+              [|File ("Lex.om", "lib\\parse\\C\\Lex.install");
+                File ("Parse.om", "lib\\parse\\C\\Parse.install")|]);
+             Directory ("LaTeX",
+              [|File ("Lex.om", "lib\\parse\\LaTeX\\Lex.install");
+                File ("Macros.om", "lib\\parse\\LaTeX\\Macros.install");
+                File ("Parse.om", "lib\\parse\\LaTeX\\Parse.install");
+                File ("Spell.om", "lib\\parse\\LaTeX\\Spell.install")|])|]);
+          Directory ("web",
+           [|File ("simple-xml.om", "lib\\web\\simple-xml.install")|])|])|])|]
 
 let print_indent n =
   for _ = 1 to n do
     print_string "  "
   done
 
+let pi = print_indent
+let pe = print_endline
+let sp = Printf.sprintf
 let components = ref []
 
-let rec gen indent = Array.iter (function
+let rec gen i = Array.iter (function
   | Directory (name, files) ->
-      print_indent indent; print_endline (Printf.sprintf {|<Directory Id="%s" Name="%s">|} (valid_identifier name) name);
-      gen (indent + 1) files;
-      print_indent indent; print_endline (Printf.sprintf {|</Directory>|})
+      pi i; pe (sp {|<Directory Id="%s" Name="%s">|} (valid_identifier name) name);
+      gen (i+1) files;
+      pi i; pe (sp {|</Directory>|})
   | File (dst_name, src_path) ->
       let id = valid_identifier src_path in
       assert (not (List.mem id !components));
       components := id :: !components;
-      print_indent indent; print_endline (Printf.sprintf {|<Component Id="%s" Guid="*">|} id);
-      print_indent indent; print_endline (Printf.sprintf {|  <File Source="%s" Name="%s" Id="%s" KeyPath="yes"/>|} src_path dst_name ("file_" ^ id));
-      print_indent indent; print_endline (Printf.sprintf {|</Component>|}))
+      pi i; pe (sp {|<Component Id="%s" Guid="*">|} id);
+      pi i; pe (sp {|  <File Source="%s" Name="%s" Id="%s" KeyPath="yes"/>|} src_path dst_name ("file_" ^ id));
+      pi i; pe (sp {|</Component>|}))
 
 let _=
   print_endline {|<?xml version="1.0"?>
