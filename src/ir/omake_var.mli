@@ -1,12 +1,13 @@
-(*
+(**
  * Variables.
  *)
 
 
 
-(*
- * Generally useful variables in pervasives.
+(**
+ * {2 Generally useful variables in pervasives.}
  *)
+
 val explicit_target_var        : Omake_ir.var_info
 val wild_var                   : Omake_ir.var_info
 val cwd_var                    : Omake_ir.var_info
@@ -95,9 +96,10 @@ val extends_var                : Omake_ir.var_info
 val omakeflags_var             : Omake_ir.var_info
 val omakeargv_var              : Omake_ir.var_info
 
-(*
- * Internal fields.
+(**
+ * {2 Internal fields.}
  *)
+
 val loc_field_var              : Omake_ir.var_info
 val builtin_field_var          : Omake_ir.var_info
 val map_field_var              : Omake_ir.var_info
@@ -106,7 +108,8 @@ val lexer_field_var            : Omake_ir.var_info
 val file_var                   : Omake_ir.var_info
 val file_id_var                : Omake_ir.var_info
 
-(*
+(** {2 Others } *)
+(**
  * $0, $1, $2...
  *)
 val create_numeric_var         : int -> Omake_ir.var_info

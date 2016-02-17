@@ -1,9 +1,9 @@
-(*
+(**
  * Options for the omake program.
  *
  *)
 
-(*
+(**
  * When to print output.
  *)
 type eval_flag =
@@ -11,7 +11,7 @@ type eval_flag =
   | EvalLazy
   | EvalEager
 
-(*
+(**
  * Diversion control.
  *)
 type output_flag =
@@ -20,7 +20,7 @@ type output_flag =
   | OutputPostponeError
   | OutputRepeatErrors
 
-(*
+(**
  * Make the default state explicit (the actual value may depend on the value of other settings).
  *)
 type setting 
@@ -62,24 +62,25 @@ type t =
   }
  
 
-(*
+(**
  * Initial options.
  *)
 val default_options : t
 
-(*
- * Argument specifier.
+(**
+ * {2 Argument specifier.}
  *)
 val options_spec : (string * t Lm_arg.poly_spec * string) list
 val output_spec  : (string * t Lm_arg.poly_spec * string) list
 
 (*
- * Parallel build options
+ * {2 Parallel build options}
  *)
 val opt_parallel : t -> bool
 val opt_job_count : t -> int
 val opt_remote_servers : t -> (string * int) list
 
+(** {2 Others} *)
 val opt_terminate_on_error : t -> bool
 val opt_poll : t -> bool
 val opt_poll_on_done : t -> bool
@@ -113,7 +114,7 @@ val opt_absname : t -> bool
 val set_absname_opt : t -> bool -> t
 
 val opt_divert : t -> bool
-    (* true when some --output-* diversions other than --output-normal are enabled *)
+    (** true when some --output-* diversions other than --output-normal are enabled *)
 
 val opt_output : t -> output_flag -> bool
 

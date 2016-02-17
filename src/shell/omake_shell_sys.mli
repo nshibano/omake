@@ -1,6 +1,5 @@
+(** Architecture-independent process management. *)
 (*
- * Architecture-independent process management.
- *
  * ----------------------------------------------------------------
  *
  * @begin[license]
@@ -31,32 +30,32 @@
 open Omake_shell_sys_type
 open Omake_shell_type
 
-(*
+(**
  * Set whether we are in interactive mode.
  * Defaults to true.
  *)
 val set_interactive : bool -> unit
 
-(*
+(**
  * Set the process group for the current terminal.
  * Does nothing if there is no terminal, or the
  * session is not interactive.
  *)
 val set_tty_pgrp   : pgrp -> unit
 
-(*
+(**
  * Send a signal to a process.
  *)
 val kill           : pgrp -> signal -> unit
 
-(*
+(**
  * Set/clear the close on exec flags.
  *)
 val close_fd            : Unix.file_descr -> unit
 val set_close_on_exec   : Unix.file_descr -> unit
 val clear_close_on_exec : Unix.file_descr -> unit
 
-(*
+(**
  * Wait:
  *    wait pgrp leader nohang
  *       pgrp: if 0, wait for all groups
@@ -69,13 +68,13 @@ val clear_close_on_exec : Unix.file_descr -> unit
  *)
 val wait : pgrp -> bool -> bool -> pid * Unix.process_status
 
-(*
+(**
  * Create a thread or a process executing the function.
  * Note, the called thread should close the channels it is passed.
  *)
 val create_thread : create_thread -> pid
 
-(*
+(**
  * Create an actual process.
  *)
 val create_process : create_process -> pid

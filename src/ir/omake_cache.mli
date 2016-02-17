@@ -1,20 +1,20 @@
-(*  Cache information about past runs. *)
+(**  Cache information about past runs. *)
 
 
-(* Debugging *)
+(** Debugging *)
 val debug_cache : bool ref
 
-(* The abstract type for the cache database *)
+(** The abstract type for the cache database *)
 type t
 
-(* Keys for various functions *)
+(** Keys for various functions *)
 type key
 
-(* Directory listing *)
+(** Directory listing *)
 type dir_listing
 type exe_listing
 
-(* Manifest keys *)
+(** Manifest keys *)
 val scanner_fun         : key
 val rule_fun            : key
 val env_fun             : key
@@ -22,17 +22,17 @@ val include_fun         : key
 
 val env_target  : Omake_node.Node.t
 
-(* Fetch the cache *)
+(** Fetch the cache *)
 val create       : unit -> t
 val from_channel : Omake_options.t -> in_channel -> t
 val to_channel   : Pervasives.out_channel -> t -> unit
 
-(*
+(**
  * Stats.
  *)
 val stats : t -> int * int
 
-(*
+(**
  * File digest information.
  * The reset functions indicate that stat info may need to be recomputed.
  * The stat functions get the digest.
@@ -56,15 +56,15 @@ val force_stat_table : t -> 'b Omake_node.NodeTable.t -> Omake_cache_type.digest
 val stat_changed     : t -> Omake_node.Node.t -> bool
 
 val process_delayed_digests : t -> unit
-  (* Run through the request queue, and compute the digests *)
+  (** Run through the request queue, and compute the digests *)
 
-(*
+(**
  * Check if a file exists.
  *)
 val exists           : t -> ?force:bool -> Omake_node.Node.t -> bool
 val exists_dir       : t -> ?force:bool -> Omake_node.Dir.t -> bool
 
-(*
+(**
  * Directory listings.  The Boolean in ls_path and ls_exe_path should
  * be true for those directory collections where auto-rehashing is to
  * be performed.
@@ -82,7 +82,7 @@ val exe_complete     : t -> exe_listing -> string -> Lm_string_set.StringSet.t
 
 val exe_suffixes     : string list
 
-(*
+(**
  * Memoizing commands.
  *
  * add                : key targets sources commands result
@@ -101,7 +101,7 @@ val up_to_date_status  : t -> key -> Omake_node.NodeSet.t -> Omake_command_type.
 val find_result        : t -> key -> Omake_node.NodeSet.t -> Omake_command_type.command_digest -> Omake_cache_type.memo_deps
 val find_result_sloppy : t -> key -> Omake_node.Node.t -> Omake_cache_type.memo_deps
 
-(*
+(**
  * Similar functions for values. The bool flag indicates whether we want a static value.
  *)
 val find_value : 
@@ -111,7 +111,7 @@ val find_value :
 val add_value : 
   t -> Omake_value_type.t -> bool -> Omake_node.NodeSet.t -> Omake_command_type.command_digest -> Omake_cache_type.memo_obj_result -> unit
 
-(*
+(**
  * Printing.
  *)
 val pp_print_digest            : Omake_cache_type.digest Lm_printf.t 

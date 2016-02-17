@@ -1,10 +1,11 @@
-(*
+(**
  * Configuration.
  *)
 
-(*
- * Error codes for various actions.
+(**
+ * {2 Error codes for various actions.}
  *)
+
 val signal_error_code   : int
 val fork_error_code     : int
 val internal_error_code : int
@@ -12,28 +13,32 @@ val deadlock_error_code : int
 val exn_error_code      : int
 val scanner_error_code  : int
 
-(*
- * Name of the database.
+(**
+ * {2 Name of the database.}
  *)
+
 val db_name : string
 
-(*
- * Name of the makefiles.
+(**
+ * {2 Name of the makefiles.}
  *)
+
 val makefile_name : string
 val makeroot_name : string
 val makeroot_short_name : string
 val omake_file_suffix : string
 
-(*
- * Cache management.
+(**
+ * {2 Cache management.}
  *)
+
 val always_use_dotomake : bool ref
 val set_omake_dir : string -> unit
 
-(*
- * Files.
+(**
+ * {2 Files.}
  *)
+
 val lib_dir         : string
 val lib_dir_reason  : string
 val home_dir        : string

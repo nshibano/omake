@@ -1,4 +1,4 @@
-(*
+(**
  * System calls.
  *)
 open Lm_printf
@@ -9,12 +9,14 @@ open Omake_shell_sys_type
 (*
  * These functions are directly exported.
  *)
+
 external set_tty_pgrp   : pgrp -> unit                    = "omake_shell_sys_set_tty_pgrp"
 external create_process : create_process -> pid           = "omake_shell_sys_create_process"
 
 (*
  * Internal.
  *)
+
 external create_thread_pid  : pgrp -> pid                 = "omake_shell_sys_create_thread_pid"
 external release_thread_pid : pid -> int -> unit          = "omake_shell_sys_release_thread_pid"
 external init_thread_pid    : pid -> unit                 = "omake_shell_sys_init_thread_pid"
@@ -46,7 +48,7 @@ let close_fd = Unix.close
  *)
 (* exception Terminated *)
 
-(*
+(**
  * The operation depends on the signal number.
  *)
 let kill pgrp signo =
@@ -59,7 +61,7 @@ let kill pgrp signo =
     | _ ->
          kill pgrp
 
-(*
+(**
  * Wait is blocking.
  *)
 let unix_wait pgrp leader nohang =
@@ -75,7 +77,7 @@ let unix_wait pgrp leader nohang =
 let wait pgrp leader nohang =
    Lm_thread_pool.blocking_section (unix_wait pgrp leader) nohang
 
-(*
+(**
  * Try to close a descriptor.
  * This is kind of bad, because some other thread
  * may have allocated that descriptor by the time we get
@@ -87,7 +89,7 @@ let try_close fd =
       Unix.Unix_error _ ->
          ()
 
-(*
+(**
  * Create a thread.  This is a real thread, but it
  * should look as much like a process as possible.
  * For this reason, we dup the stdio handles.
@@ -133,7 +135,7 @@ let create_thread info =
    in
       pid
 
-(*
+(**
  * Create a new process group.
  *)
 let create_process_group = create_thread

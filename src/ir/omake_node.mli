@@ -34,13 +34,13 @@ type mount_info = Node.t Omake_node_sig.poly_mount_info
 val no_mount_info : mount_info
 
 
-(*
+(**
  * Handle known phonies.
  *)
 val create_node_or_phony : PreNodeSet.t -> mount_info -> Mount.t -> 
   Omake_node_sig.phony_ok -> Dir.t -> string -> Node.t
 
-(* Same, but factor out the sometimes slow parser for phony names: *)
+(** Same, but factor out the sometimes slow parser for phony names: *)
 type phony_name
 val parse_phony_name : string -> phony_name  (* failsafe *)
 val create_node_or_phony_1 : PreNodeSet.t -> mount_info -> Mount.t -> 
@@ -49,7 +49,7 @@ val create_node_or_phony_1 : PreNodeSet.t -> mount_info -> Mount.t ->
 val node_will_be_phony : PreNodeSet.t -> Omake_node_sig.phony_ok -> Dir.t -> phony_name -> bool 
 
 
-(*
+(**
  * For debugging.
  *)
 val pp_print_dir  : Dir.t Lm_printf.t 

@@ -1,4 +1,4 @@
-(*
+(**
  * Argument parser.
  *)
 type arg_buffer
@@ -8,7 +8,7 @@ val arg_buffer_add_string : arg_buffer -> string -> arg_buffer
 val arg_buffer_add_data   : arg_buffer -> string -> arg_buffer
 val arg_buffer_contents   : arg_buffer -> Omake_command_type.arg_string list
 
-(*
+(**
  * Parse commands.
  *)
 val parse_commands : 
@@ -20,7 +20,7 @@ val parse_commands :
    ('exe, 'arg_command, 'arg_apply, 'arg_other, 'apply) Omake_shell_type.poly_pipe,
    'value) Omake_command_type.poly_command_line list
 
-(*
+(**
  * Add the output flag.
  *)
 val command_allow_output :

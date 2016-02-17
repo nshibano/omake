@@ -1,4 +1,6 @@
-(*
+(** *)
+
+(**
  * Individual command arguments have three forms:
  *    - value lists
  *    - arg_string lists
@@ -14,7 +16,7 @@ type arg = arg_string list
 
 type command_digest = Digest.t option
 
-(*
+(**
  * A command line is a string, together with come flags.
  *)
 type command_flag =
@@ -22,7 +24,7 @@ type command_flag =
   | AllowFailureFlag
   | AllowOutputFlag
 
-(*
+(**
  * The command line has some flags,
  * and a string to be executed internally
  * or passed to the shell.

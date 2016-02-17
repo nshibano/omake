@@ -1,5 +1,5 @@
+(** Architecture-independent process control. *)
 (*
- * Architecture-independent process control.
  *
  * ----------------------------------------------------------------
  *
@@ -29,13 +29,13 @@
  * @end[license]
  *)
 
-(*
+(**
  * Process and group identifiers.
  *)
 type pgrp = int
 type pid = int
 
-(*
+(**
  * Argument records for thread and process creation.
  *)
 type create_thread =
