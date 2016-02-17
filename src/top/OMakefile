@@ -5,8 +5,8 @@ top_config.ml:
         section
             FP = $(fopen top_config.ml,w)
             fprintln($(FP), $""
-let bootdir = "$(absname $(BOOTDIR))" 
-let builddir = "$(absname $(BUILDDIR))"
+let bootdir = {|$(absname $(BOOTDIR))|} 
+let builddir = {|$(absname $(BUILDDIR))|}
 let include_dirs = let (//) = Filename.concat in [
 	builddir // "src"// "ast" ; 
 	builddir // "src"// "build" ; 	
@@ -33,6 +33,7 @@ let include_dirs = let (//) = Filename.concat in [
 FILES[] = 
 	top_config	
 	boot_top
-#.DEFAULT: $(OCamlLibrary boot_repl, $(FILES))
+
+OCamlLibrary(boot_repl, $(FILES))
 
 #OCAMLINCLUDES+= $(shell ocamlfind query utop)
