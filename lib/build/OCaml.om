@@ -520,7 +520,7 @@ if you really want to build this file.
         if $(not $(BYTE_ENABLED))
             err. =
                 extends $(UnbuildableException)
-                message = $(string $"You are trying to build OCaml native code file: "%.cmo$"
+                message = $(string $"You are trying to build OCaml byte code file: "%.cmo$"
 However, the BYTE_ENABLED flag is not set.
 Include the following definition in your OMakefile
 if you really want to build this file.
