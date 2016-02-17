@@ -528,6 +528,6 @@ omake.msi: wxsgen.ml src/main/omake$(EXE) src/main/osh$(EXE) $(DEFAULTFILES) $(I
 
 htdoc: src/main/omake$(EXE)
   mkdir -p htdoc
-  ocamldoc.opt -html -d htdoc -sort -keep-code -I +threads $(mapprefix -I, $(glob D, src/*)) $(filter %.mli %.ml, $(filter-exists $(set $(dependencies-all $<))))
+  ocamldoc.opt -html -d htdoc -sort -keep-code -stars -I +threads $(mapprefix -I, $(glob D, src/*)) $(filter %.mli %.ml, $(filter-exists $(set $(dependencies-all $<))))
 
 .SUBDIRS: test bench
