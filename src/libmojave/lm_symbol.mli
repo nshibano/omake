@@ -3,12 +3,12 @@
 type t 
 
 
-(*
+(**
  * Debugging adds extra qualifiers to new symbols.
  *)
 val debug_symbol : bool ref
 
-(*
+(**
  * An "empty" variable name
  *)
 val empty_var : t
@@ -32,13 +32,13 @@ val new_symbol_string : string -> t
 val to_int : t -> int
 val to_string : t -> string
 
-(*
+(**
  * Find a symbol for which the predicate is false.
  *)
 val new_name : t -> (t -> bool) -> t
 (* val new_name_gen : t -> (t -> 'a option) -> 'a *)
 
-(*
+(**
  * Get back the string.
  *)
 val string_of_symbol : t -> string
@@ -48,7 +48,7 @@ val hash : t -> int
 val eq : t -> t -> bool
 val compare : t -> t -> int
 
-(*
+(**
  * This table provides associations between symbols
  * and values.
  *)

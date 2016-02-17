@@ -1,4 +1,4 @@
-(*
+(**
  * Generate magic numbers.
  *)
 

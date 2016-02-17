@@ -1,4 +1,4 @@
-(*
+(**
  * Define an intermediate representation that is a little
  * easier to work with than the AST.
  *)
@@ -11,14 +11,14 @@ type var = Lm_symbol.t
 type keyword = Lm_symbol.t
 type curry_flag = bool
 
-(*
+(**
  * Whether a function of zero arguments should be applied.
  *)
 type apply_empty_strategy =
    ApplyEmpty
  | ApplyNonEmpty
 
-(*
+(**
  * Arity of functions.
  *)
 type arity =
@@ -27,14 +27,14 @@ type arity =
  | ArityNone
  | ArityAny
 
-(*
+(**
  * Kinds of matches.
  *)
 type match_kind =
    MatchWild
  | MatchRegex
 
-(*
+(**
  * Variable definitions have several forms.
  *    VarDefNormal: normal definition
  *    VarDefAppend: append the text
@@ -43,7 +43,7 @@ type var_def_kind =
    VarDefNormal
  | VarDefAppend
 
-(*
+(**
  * Simple version of variables includes the kind of
  * scope, the location, and the variable name.
  *)
@@ -55,12 +55,12 @@ type var_info =
 
 type param = var_info
 
-(*
+(**
  * A symbol table maps variables to their info.
  *)
 type senv = var_info Lm_symbol.SymbolTable.t
 
-(*
+(**
  * Exporting.
  *)
 type export_item =
@@ -73,13 +73,13 @@ type export =
  | ExportAll
  | ExportList of export_item list
 
-(*
+(**
  * A return identifier is a unique id for the function to return from.
  * NOTE: this is a unique string, compared with pointer equality.
  *)
 type return_id = Lm_location.t * string
 
-(*
+(**
  * Expression that results in a string.
  *
  * Functions: a function takes a triple:
@@ -119,17 +119,17 @@ and source_exp = Omake_node_sig.node_kind * string_exp
 
 and source_table = string_exp Lm_symbol.SymbolTable.t
 
-(*
+(**
  * Optional function arguments.
  *)
 and keyword_param = var * param * string_exp option
 
-(*
+(**
  * Arguments are a pair of normal arguments and keyword arguments.
  *)
 and keyword_arg = var * string_exp
 
-(*
+(**
  * Commands.
  *)
 and rule_command =
@@ -188,7 +188,7 @@ and exp =
  | ReturnObjectExp  of Lm_location.t * Lm_symbol.t list
  | ReturnSaveExp    of Lm_location.t
 
-(*
+(**
  * The IR stored in a file.
  *    ir_classnames   : class names of the file
  *    ir_vars         : variables defined by this file
@@ -201,7 +201,7 @@ type t =
    }
 (* %%MAGICEND%% *)
 
-(*
+(**
  * Variable classes.
  *    private: variables local to the file, statically scoped.
  *    this: object fields, dynamically scoped.
@@ -221,7 +221,7 @@ type simple_var_info = var_scope * var
 
 
 
-(*  Path definitions. *)
+(**  Path definitions. *)
 type name_info =
    { name_static     : bool;
      name_curry      : bool;

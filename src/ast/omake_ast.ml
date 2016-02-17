@@ -1,7 +1,7 @@
-(* Abstract syntax of OMakefiles. *)
+(** Abstract syntax of OMakefiles. *)
 type var = Lm_symbol.t
 
-(*
+(**
  * Shell flags indicating whether a body needs to be read.
  *)
 type body_flag =
@@ -10,7 +10,7 @@ type body_flag =
   | ColonBody
   | ArrayBody
 
-(*
+(**
  * Function applications can be tagged as Lazy or Eager.
  *)
 type apply_strategy =
@@ -19,7 +19,7 @@ type apply_strategy =
   | NormalApply
   | CommandApply
 
-(*
+(**
  * When a variable is defined, these are additional flags.
  * The bool is true if this is an array operation.
  *)
@@ -31,7 +31,7 @@ type define_flag =
   | DefineNormal
   | DefineAppend
 
-(*
+(**
  * Expressions.
  *
  * The String*Exp are all strings.  Normally, they are all interpreted
@@ -82,7 +82,7 @@ and arg      =
   | ArrowArg    of param list * exp
 
 and parse_arg =
-  | IdArg       of string * (string * Lm_location.t) option * Lm_location.t   (* Second string is always whitespace *)
+  | IdArg       of string * (string * Lm_location.t) option * Lm_location.t   (** Second string is always whitespace *)
   | NormalArg   of arg
 
 and args     = arg list
