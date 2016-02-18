@@ -1,4 +1,4 @@
-(*
+(**
  * Execution codes.
  *
  *)
@@ -7,14 +7,14 @@
 (* open Omake_options *)
 
 
-(*
+(**
  * Type of process codes.
  *)
 type process_code =
    ProcessFailed
  | ProcessStarted of Omake_exec_id.t
 
-(*
+(**
  * Print flags.
  *)
 type ('exp, 'pid, 'value) print_flag =
@@ -22,7 +22,7 @@ type ('exp, 'pid, 'value) print_flag =
  | PrintLazy  of 'exp
  | PrintExit  of 'exp * int * 'value * float
 
-(*
+(**
  * Internal wait status.
  *)
 type ('exp, 'pid, 'value) wait_internal_code =
@@ -31,7 +31,7 @@ type ('exp, 'pid, 'value) wait_internal_code =
  | WaitInternalStarted of bool
  | WaitInternalNone
 
-(*
+(**
  * External wait status.
  * WaitServer count: a new server started, willing to serve "count" more jobs
  *)
@@ -41,7 +41,7 @@ type ('exp, 'pid, 'value) wait_code =
  | WaitNotify of Lm_notify.event
  | WaitNone
 
-(*
+(**
  * Types of upcalls.
  *)
 type ('exp, 'pid, 'value) shell =
@@ -62,28 +62,28 @@ type ('exp, 'pid, 'value) shell =
 type ('exp, 'pid, 'value) status_fun = Omake_exec_id.t -> ('exp, 'pid, 'value) print_flag -> unit
 type output_fun = Omake_exec_id.t -> string -> int -> int -> unit
 
-(*
+(**
  * Internal execution server has a few extra functions.
  *)
 module type ExecServer =
 sig
-   (*
+   (**
     * Command processor.
     *)
    type ('exp, 'pid, 'value) t
 
-   (*
+   (**
     * Create the processor.
     * The directory is the current working root directory.
     *)
    val create : string -> ('exp, 'pid, 'value) t
 
-   (*
+   (**
     * Close it, and possibly deallocate state.
     *)
    val close : ('exp, 'pid, 'value) t -> unit
 
-   (*
+   (**
     * Start a command, and return the process ID.
     *)
    val spawn :
@@ -97,55 +97,55 @@ sig
       'exp list ->                              (* Commands to execute *)
       process_code                              (* The process id *)
 
-   (*
+   (**
     * The internal versions are polled using select.
     *)
    val descriptors : ('exp, 'pid, 'value) t -> Unix.file_descr list
 
-   (*
+   (**
     * Handle input from one of the descriptors. Returns true on EOF. This
     * function can run in a thread.
     *)
    val handle : ('exp, 'pid, 'value) t -> Omake_options.t -> Unix.file_descr -> bool
 
-   (*
+   (**
     * Synchronizing point for EOF.
     *)
    val acknowledge_eof : ('exp, 'pid, 'value) t -> Omake_options.t -> Unix.file_descr -> unit
 
-   (*
+   (**
     * Special actions for EOF. (Including closing fd's.)
     *)
    val handle_eof : ('exp, 'pid, 'value) t -> Omake_options.t -> Unix.file_descr -> unit
 
-   (*
+   (**
     * Wait for any one of the commands to finish.
     *)
    val wait : ('exp, 'pid, 'value) t -> Omake_options.t -> ('exp, 'pid, 'value) wait_internal_code
 end
 
-(*
+(**
  * The execution service.
  *)
 module type ExecService =
 sig
-   (*
+   (**
     * Command processor.
     *)
    type ('exp, 'pid, 'value) t
 
-   (*
+   (**
     * Create the processor.
     * The directory is the current working root directory.
     *)
    val create : Omake_node.Dir.t -> Omake_options.t -> ('exp, 'pid, 'value) t
 
-   (*
+   (**
     * Close it, and possibly deallocate state.
     *)
    val close : ('exp, 'pid, 'value) t -> unit
 
-   (*
+   (**
     * Start a command, and return the process ID.
     *)
    val spawn :
@@ -160,20 +160,20 @@ sig
       'exp list ->                              (* Commands to execute *)
       process_code                              (* The process id *)
 
-   (*
+   (**
     * Wait for any one of the commands to finish.
     *)
    val wait : ?onblock:(unit->unit) -> 
               ('exp, 'pid, 'value) t -> Omake_options.t -> 
               ('exp, 'pid, 'value) wait_code
 
-   (*
+   (**
     * Notify when a file changes.
     *)
    val monitor : ('exp, 'pid, 'value) t -> Omake_node.Node.t -> unit
    val monitor_tree : ('exp, 'pid, 'value) t -> Omake_node.Dir.t -> unit
 
-   (*
+   (**
     * Get the next file change notification.
     * This function blocks.  Use wait if you want
     * nonblocking behavior.

@@ -1,6 +1,6 @@
+(**
+ * Utilities for program execution. *)
 (*
- * Utilities for program execution.
- *
  * ----------------------------------------------------------------
  *
  * @begin[license]

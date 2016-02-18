@@ -1,4 +1,4 @@
-(*
+(**
  * Symbols used everywhere.
  * Eventually, we should collect all the global symbols and
  * put them here.
