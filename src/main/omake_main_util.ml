@@ -38,7 +38,7 @@ let rec search start cwd len  i =
   else
     search start cwd len (i - 1)
 
-(*
+(**
  * Find the outermost OMakeroot.
  *)
 let chroot () =

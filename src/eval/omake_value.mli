@@ -1,16 +1,18 @@
+(** Values *)
+
 (**
   If there is only one value,
   do not create the array. *)
 val concat_array : Omake_value_type.t list -> Omake_value_type.t
 
 
-(*
+(**
  * Concatenate some strings.
  * If there is only 1 value, do not create the array.
  *)
 val concat_strings : string list -> Omake_value_type.t
 
-(*
+(**
  * Expand a value so that the outermost constructor
  * is not an application.
  *)
@@ -21,7 +23,7 @@ val eval_object_value : Omake_env.t -> Omake_value_type.pos -> Omake_value_type.
 
 val add_object_value  : Omake_value_type.obj -> Omake_value_type.t -> Omake_value_type.obj
 
-(*
+(**
  * Convert to a string.
  *)
 val string_of_value  : Omake_env.t -> Omake_value_type.pos -> Omake_value_type.t -> string
@@ -29,8 +31,8 @@ val strings_of_value : Omake_env.t -> Omake_value_type.pos -> Omake_value_type.t
 val values_of_value  : Omake_env.t -> Omake_value_type.pos -> Omake_value_type.t -> Omake_value_type.t list
 val vars_of_value    : Omake_env.t -> Omake_value_type.pos -> Omake_value_type.t -> Omake_ir.var_info list
 
-(*
- * Coercions.
+(**
+ * {2 Coercions.}
  *)
 val bool_of_value       : Omake_env.t -> Omake_value_type.pos -> Omake_value_type.t -> bool
 val int_of_value        : Omake_env.t -> Omake_value_type.pos -> Omake_value_type.t -> int
