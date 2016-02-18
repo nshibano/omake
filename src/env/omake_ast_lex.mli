@@ -9,7 +9,7 @@ val parse_deps   : string ->
   (Omake_ast.exp * Omake_ast.exp * Lm_location.t )
     list
 
-(*
+(**
  * Shell gets its own handle.
  *)
 type session

@@ -1,6 +1,6 @@
+(**
+ * Secondary lexer for expressions. *)
 (*
- * Secondary lexer for expressions.
- *
  * ----------------------------------------------------------------
  *
  * @begin[license]

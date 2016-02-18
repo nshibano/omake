@@ -1,9 +1,10 @@
+(** *)
 
 val debug_rule     : bool ref
 val debug_build    : bool ref
 val debug_deps     : bool ref
 
-(*
+(**
  * .omakedb save interval (0 - disable)
  *)
 val save_interval  : float ref

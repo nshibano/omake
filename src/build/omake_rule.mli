@@ -1,17 +1,17 @@
-(*
+(**
  * Rule expansion.
  *)
 
 
-(*  Debugging. *)
+(**  Debugging. *)
 val debug_active_rules : bool ref
 
-(*
+(**
  * Expand rules so that the rule body is not a function.
  *)
 val expand_rule : Omake_env.erule -> Omake_env.erule
 
-(*
+(**
  * Glob options.
  *)
 val glob_options_of_string : Lm_glob.glob_option list -> string -> Lm_glob.glob_option list
@@ -21,12 +21,12 @@ val normalize_apply :  Omake_env.t -> Omake_value_type.pos -> Lm_location.t -> L
 
 
 
-(*
+(**
  * Evaluators for the Exec module.
  *)
 val eval_shell   : Omake_env.t -> Omake_value_type.pos -> (Omake_env.arg_command_line, Omake_env.pid, Omake_value_type.t) Omake_exec_type.shell
 
-(*
+(**
  * Create the command lines.
  *   eval_commands venv loc target sloppy_deps commands
  *
@@ -35,7 +35,7 @@ val eval_shell   : Omake_env.t -> Omake_value_type.pos -> (Omake_env.arg_command
  *)
 val eval_commands : Omake_env.t -> Lm_location.t -> Omake_node.Node.t -> Omake_node.NodeSet.t -> Omake_env.command_info list -> Omake_env.arg_command_line list
 
-(*
+(**
  * Rules and shell expressions.
  *)
 val eval_rule_exp :
