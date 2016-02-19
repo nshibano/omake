@@ -1,9 +1,9 @@
-(*
+(**
  * Wildcard string.
  *)
 val wild_string : string
 
-(*
+(**
  * Wildcard matching. "Incoming" patterns must have exactly one instance
  * of the pattern symbol %. "Outgoing" patterns may have any number.
  *)

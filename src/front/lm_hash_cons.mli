@@ -24,7 +24,7 @@ module Make (Arg : sig
    (* For debugging *)
    val debug : string
 
-   (* The client needs to provide hash and comparison functions *)
+   (** The client needs to provide hash and comparison functions *)
    val hash : t -> int
    val compare : t -> t -> int
 end
@@ -33,24 +33,24 @@ end
    type state
    type t
 
-   (* States *)
+   (** States *)
    val create_state : unit -> state
    val length : state -> int
 
-   (* Normal creation *)
+   (** Normal creation *)
 
    val create : state ->  Arg.t -> t
    val get : state -> t ->  Arg.t
 
-   (* Hash code *)
+   (** Hash code *)
    val hash : t -> int
 
-   (* Comparison *)
+   (** Comparison *)
    val compare : t -> t -> int
 
-   (* Map over an array of hash codes *)
+   (** Map over an array of hash codes *)
    val map_array : (t -> Arg.t(* elt *) -> 'a) -> state -> 'a array
 
-   (* Fold over all of the items *)
+   (** Fold over all of the items *)
    val fold : ('a -> t -> 'a) -> 'a -> state -> 'a
 end

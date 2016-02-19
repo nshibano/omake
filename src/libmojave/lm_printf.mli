@@ -1,4 +1,4 @@
-
+(** *)
 
 (**
  * For now, just use normal output channels.
@@ -11,22 +11,25 @@ val open_out     : string -> Format.formatter
 val open_out_bin : string -> Format.formatter
 
 
-(*
- * These functions are bad style for functional programs.
+(**
+ * {2 These functions are bad style for functional programs.}
  *)
+
 val prerr_char    : char -> unit
 val prerr_int     : int -> unit
 val prerr_string  : string -> unit
 
-(*
- * Flush the output.
+(**
+ * {2 Flush the output.}
  *)
+
 val flush  : Format.formatter -> unit
 val eflush : Format.formatter -> unit
 
-(*
- * Printing.
+(**
+ * {2 Printing.}
  *)
+
 val eprintf : ('a, Format.formatter, unit) format -> 'a
 val printf  : ('a, Format.formatter, unit) format -> 'a
 val sprintf : ('a, unit, string) format -> 'a
@@ -34,19 +37,21 @@ val fprintf : Format.formatter -> ('a, Format.formatter, unit) format -> 'a
 val bprintf : Buffer.t -> ('a, Format.formatter, unit) format -> 'a
 
 (*
- * List printing helpers.
+ * {2 List printing helpers.}
  *)
+
 val print_any_list : (Format.formatter -> 'a -> unit) -> Format.formatter -> 'a list -> unit
 val print_string_list : Format.formatter -> string list -> unit
 val print_int_list : Format.formatter -> int list -> unit
 
 (************************************************************************
- * Formatter interface.
+ * {1 Formatter interface.}
  *)
 
 (*
- * Boxes.
+ * {2 Boxes.}
  *)
+
 val open_box : int -> unit
 val open_vbox : int -> unit
 val open_hbox : unit -> unit
@@ -55,8 +60,9 @@ val open_hovbox : int -> unit
 val close_box : unit -> unit
 
 (*
- * Formatting functions.
+ * {2 Formatting functions.}
  *)
+
 val print_string : string -> unit
 val print_as : int -> string -> unit
 val print_int : int -> unit
@@ -65,8 +71,9 @@ val print_char : char -> unit
 val print_bool : bool -> unit
 
 (*
- * Break hints.
+ * {2 Break hints.}
  *)
+
 val print_space : unit -> unit
 val print_cut : unit -> unit
 val print_break : int -> int -> unit
@@ -76,27 +83,31 @@ val force_newline : unit -> unit
 val print_if_newline : unit -> unit
 
 (*
- * Margin.
+ * {2 Margin.}
  *)
+
 val set_margin : int -> unit
 val get_margin : unit -> int
 
 (*
- * Indentation limit.
+ * {2 Indentation limit.}
  *)
+
 val set_max_indent : int -> unit
 val get_max_indent : unit -> int
 
 (*
- * Formatting depth.
+ * {2 Formatting depth.}
  *)
+
 val set_max_boxes : int -> unit
 val get_max_boxes : unit -> int
 val over_max_boxes : unit -> bool
 
 (*
- * Tabulations.
+ * {2 Tabulations.}
  *)
+
 val open_tbox : unit -> unit
 val close_tbox : unit -> unit
 val print_tbreak : int -> int -> unit
@@ -104,14 +115,16 @@ val set_tab : unit -> unit
 val print_tab : unit -> unit
 
 (*
- * Ellipsis.
+ * {2 Ellipsis.}
  *)
+
 val set_ellipsis_text : string -> unit
 val get_ellipsis_text : unit -> string
 
 (*
- * Redirecting formatter output.
+ * {2 Redirecting formatter output.}
  *)
+
 val set_formatter_out_channel      : Pervasives.out_channel -> unit
 val set_formatter_output_functions : (string -> int -> int -> unit) -> (unit -> unit) -> unit
 val get_formatter_output_functions : unit -> (string -> int -> int -> unit) * (unit -> unit)
@@ -125,8 +138,9 @@ val get_all_formatter_output_functions :
    (int -> unit)
 
 (*
- * Multiple formatted output.
+ * {2 Multiple formatted output.}
  *)
+
 type formatter = Format.formatter
 
 val formatter_of_out_channel     : Pervasives.out_channel -> formatter
@@ -186,7 +200,7 @@ val pp_get_all_formatter_output_functions :
    (unit -> unit) *
    (int -> unit)
 
-(* Prints a "; "- separated list. *)
+(** Prints a "; "- separated list. *)
 val pp_print_any_list : (formatter -> 'a -> unit) -> formatter -> 'a list -> unit
 
 

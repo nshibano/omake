@@ -1,6 +1,6 @@
+(**
+ * Status printing. *)
 (*
- * Status printing.
- *
  * ----------------------------------------------------------------
  *
  * @begin[license]
@@ -37,29 +37,29 @@ open Omake_exec_type
 
 
 
-(*
+(**
  * Flush the progress meter.
  *)
 val progress_flush : unit -> unit
 val progress_flushed : unit -> bool
 
-(*
+(**
  * Print a progress indicator.
  *)
 val print_progress : Omake_options.t -> int -> int -> unit
 
-(*
+(**
  * Saving the cache messages.
  *)
 val print_saving   : Omake_options.t -> unit
 
-(*
+(**
  * Directory changes.
  *)
 val print_entering_current_directory : Omake_options.t -> Dir.t -> unit
 val print_leaving_current_directory  : Omake_options.t -> unit
 
-(*
+(**
  * Print a status line.
  *)
 val print_status :
@@ -71,7 +71,7 @@ val print_status :
    ('exp, 'pid, 'value) print_flag ->   (* What to print *)
    unit
 
-(*
+(**
  * Print a status lines.
  *)
 val pp_status_lines :

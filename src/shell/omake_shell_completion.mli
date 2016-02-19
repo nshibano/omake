@@ -1,7 +1,4 @@
-
-
-
-(*
+(**
  * Set the command completion fur use by readline.
  * This should be called before each call to realine,
  * or after each shell prompt.

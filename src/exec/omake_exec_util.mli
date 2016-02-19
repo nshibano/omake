@@ -1,4 +1,4 @@
-(*
+(**
  * Utilities for process execution on any platform.
  *
  *)
@@ -7,29 +7,29 @@
 
 
 
-(*
+(**
  * Debugging.
  *)
 val debug_exec : bool ref
 
-(*
+(**
  * File descriptor table.
  *)
 module IntTable : Lm_map_sig.LmMap with type key = int;;
 module FdTable : Lm_map_sig.LmMap with type key = Unix.file_descr;;
 
-(*
+(**
  * Open a pipe.  Close automatically on exceptions.
  *)
 val with_pipe : (Unix.file_descr -> Unix.file_descr -> 'a) -> 'a
 
 
-(*
+(**
  * Copy data to a file.
  *)
 val copy_file : string -> (Omake_exec_id.t -> string -> int -> int -> unit)
 
-(*
+(**
  * Tee to a file.
  *)
 type tee

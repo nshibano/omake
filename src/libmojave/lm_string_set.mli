@@ -1,6 +1,6 @@
+(**
+ * Sets of strings. *)
 (*
- * Sets of strings.
- *
  * ----------------------------------------------------------------
  *
  * @begin[license]
@@ -32,14 +32,14 @@
 open Lm_set_sig
 open Lm_map_sig
 
-(*
+(**
  * String environments.
  *)
 module StringSet : LmSet with type elt = string
 module StringTable : LmMap with type key = string
 module StringMTable : LmMapList with type key = string
 
-(*
+(**
  * String environments with lexicographical ordering.
  *)
 module LexStringSet : LmSet with type elt = string

@@ -1,9 +1,11 @@
-(*
+(** *)
+
+(**
  * Faster comparison function for strings
  *)
 val string_compare : string -> string -> int
 
-(*
+(**
  * Check whether the string has a substring.
  *
  *   equal_substring s1 off s2
@@ -13,12 +15,12 @@ val string_compare : string -> string -> int
  *)
 val equal_substring : string -> int -> string -> bool
 
-(*
+(**
  * Check whether the first string is a prefix of the second.
  *)
 val is_string_prefix : string -> string -> bool
 
-(*
+(**
  * Hex representation of a string.
  *)
 val unhex : char -> int
@@ -27,12 +29,12 @@ val hexify_sub : string -> int -> int -> string
 val unhexify : string -> string
 val unhexify_int : string -> int
 
-(*
+(**
  * Find a char in a string.
  *)
 val strchr : string -> char -> int
 
-(*
+(**
  * Membership.
  *    contains s c : true iff c appears in s
  *    contains_string s1 s2 : true iff any char in s2 appears in s1
@@ -40,24 +42,24 @@ val strchr : string -> char -> int
 val contains : string -> char -> bool
 val contains_any : string -> string -> bool
 
-(*
+(**
  * Standard definition of white space.
  *)
 val white : string
 val quotes : string
 
-(*
+(**
  * Mapping.
  *)
 val for_all : (char -> bool) -> string -> bool
 
-(*
+(**
  * Get the index of any char in the set.
  *)
 val index_set : string -> string -> int
 val rindex_set : string -> string -> int
 
-(*
+(**
  * Split a string into substrings.
  * The string is split on any character in delims.  Empty substrings
  * are returned as empty strings in the list.  For example:
@@ -67,7 +69,7 @@ val rindex_set : string -> string -> int
  *)
 val split : string -> string -> string list
 
-(*
+(**
  * Split a string based on a string delimiter.
  * For example:
  *    split_string "ABC" "fooAB.ABCbar"
@@ -79,7 +81,8 @@ val split_string : string -> string -> string list
 
 (** raise Not_found *)
 val bi_split : char -> string -> (string * string)
-(*
+
+(**
  * Split a string based on a MIME string delimiter.
  * This is similar to the above, but the delimiter is
  * prefixed by a "--", and the 2 characters after the
@@ -91,18 +94,18 @@ val bi_split : char -> string -> (string * string)
  *)
 val split_mime_string : string -> string -> string list
 
-(*
+(**
  * Escape a string so that it can be read back in C.
  *)
 val c_escaped : string -> string
 
-(*
+(**
  * SQL uses a different convention.
  *)
 val sql_escaped : string -> string
 val mysql_escaped : string -> string
 
-(*
+(**
  * Escape a string so that it can be read back in Javascript.
  * This assumes single quotes.
  *)
@@ -111,18 +114,18 @@ val html_escaped : string -> string
 val html_pre_escaped : string -> string
 val html_escaped_nonwhite : string -> string
 
-(*
+(**
  * Unescape a string.  Convert all escape sequences,
  * and remove outer double quotes.
  *)
 val unescape : string -> string
 
-(*
+(**
  * Test if a string is completely whitespace.
  *)
 val is_white : string -> bool
 
-(*
+(**
  * Split a string str into a list of substrings.
  * The string is split on any character in delims.  Quotations
  * are not split.
@@ -136,7 +139,7 @@ val is_white : string -> bool
 val tokens : string -> string -> string -> string list
 val tokens_std : string -> string list
 
-(*
+(**
  * Tokens_collect is an optimized form of token parsing
  * based on standard whitespace and quotes, and it
  * allows for incremental parsing.
@@ -168,7 +171,7 @@ val tokens_add    : 'a tokens -> 'a -> 'a tokens
 val tokens_atomic : 'a tokens -> 'a -> 'a tokens
 val tokens_flush  : 'a tokens -> 'a list
 
-(*
+(**
  * A third way to split into substrings.
  * The tokens are separated by white space,
  * and tokens may be quoted.
@@ -178,10 +181,10 @@ val tokens_flush  : 'a tokens -> 'a list
 val parse_args_list : string -> string list list
 val parse_args : string -> string list
 
-(* Add outer quotes to a string, and escape all the inner quotes. *)
+(** Add outer quotes to a string, and escape all the inner quotes. *)
 val shell_quotes : string -> string
 
-(*
+(**
  * Reconstruct an argv string from a list of strings.
  * The strings are concatenated with intervening whitespace.
  * If any of the strings contains whitespace or non-outermost
@@ -189,24 +192,24 @@ val shell_quotes : string -> string
  *)
 val concat_argv : string list -> string
 
-(*
+(**
  * Construct a string from the list, separating by whitespace.
  * Quotes are added if the string contains special characters.
  *)
 val string_argv : string list -> string
 
-(*
+(**
  * Same as string_argv, but always quote the result.
  *)
 val quote_argv : string list -> string
 val quote_string : string -> string
 
-(*
+(**
  * Add a prefix to every string, and concatenate.
  *)
 val prepend : string -> string list -> string
 
-(*
+(**
  * Search for a pattern in the indicated buffer, within the start
  * and length constraints applied to the buffer.  Note that this
  * uses a very inefficient algorithm; at some point I (JDS) will
@@ -218,25 +221,25 @@ val prepend : string -> string list -> string
  *)
 val strpat : string -> int -> int -> string -> int
 
-(*
+(**
  * Trim whitespace at outer boundaries from a string.
  *)
 val trim : string -> string
 
-(*
+(**
  * Trim all consecutive whitespace from a string, respecting
  * quotes.
  *)
 val trim_all : string -> string -> string -> string
 val trim_std : string -> string
 
-(*
+(**
  * Read the file into a string.
  * Raises Sys_error if the file can't be opened.
  *)
 val string_of_file : string -> string
 
-(*
+(**
  * Lm_debug versions of standard library.
  *)
 val create : string -> int -> string
@@ -246,7 +249,7 @@ val blit : string -> string -> int -> string -> int -> int -> unit
 val set : string -> string -> int -> char -> unit
 val get : string -> string -> int -> char
 
-(*
+(**
  * Converting to-from the hex representation used in URI.
  *)
 val decode_hex_name : string -> string

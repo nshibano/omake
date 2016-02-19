@@ -1,6 +1,6 @@
+(**
+ * Select doesn't work on Win32, so use threads instead. *)
 (*
- * Select doesn't work on Win32, so use threads instead.
- *
  * ----------------------------------------------------------------
  *
  * @begin[license]
@@ -35,31 +35,31 @@
  *)
 val debug_thread : bool ref
 
-(*
+(**
  * Are threads enabled?
  *)
 val enabled : bool
 
-(*
+(**
  * Start a job in a new thread.
  * If the bool is false, the result is
  * not returned by wait when the thread exits.
  *)
 val create : bool -> (unit -> unit) -> int
 
-(*
+(**
  * When a job performs blocking IO, it should
  * unlock the main lock.
  *)
 val blocking_section : ('a -> 'b) -> 'a -> 'b
 val resume_inner_section   : ('a -> 'b) -> 'a -> 'b
 
-(*
+(**
  * Wait for any of the jobs to complete.
  *)
 val wait : unit -> int list
 
-(*
+(**
  * Wait for a specific job to complete.
  *)
 val waitpid : int -> unit

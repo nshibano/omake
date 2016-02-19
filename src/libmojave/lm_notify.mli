@@ -1,10 +1,11 @@
+(** *)
 
-(*
+(**
  * Event manager.
  *)
 type t
 
-(*
+(**
  * Events.
  *)
 type code =
@@ -24,15 +25,17 @@ type event =
      notify_name : string
    }
 
-(*
- * Debugging.
+(**
+ * {2 Debugging.}
  *)
+
 val debug_notify      : bool ref
 val string_of_code    : code -> string
 
-(*
- * Methods.
+(**
+ * {2 Methods.}
  *)
+
 val enabled           : bool
 val create            : unit -> t
 val close             : t -> unit

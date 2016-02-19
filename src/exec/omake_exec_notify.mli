@@ -1,6 +1,6 @@
+(**
+ * File change notifications. *)
 (*
- * File change notifications.
- *
  * ----------------------------------------------------------------
  *
  * @begin[license]
@@ -31,20 +31,20 @@
 open Omake_node
 open Omake_exec_type
 
-(*
+(**
  * Local server.
  *)
 module Notify :
 sig
    include ExecServer
 
-   (*
+   (**
     * Watch a node for changes.
     *)
    val monitor      : ('exp, 'pid, 'value) t -> Node.t -> unit
    val monitor_tree : ('exp, 'pid, 'value) t -> Dir.t -> unit
 
-   (*
+   (**
     * Get the next notification event.
     *)
    val pending    : ('exp, 'pid, 'value) t -> bool
